@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="branch_tree.css">
+</head>
+
+<body class="branch-tree-page">
+
+    <main class="main_frame">
+        <section class="left_panel">
+            <div class="floating_content">
+                <header class="app-page-toolbar app-page-toolbar--bleed">
+                    <h1 class="page-toolbar-title"><span class="title-main-line"><span data-page-title data-i18n></span><span class="title-tagline" data-page-subtitle data-i18n></span></span></h1>
+                    <div class="app-page-toolbar-actions">
+                        <a href="index.html" class="home-link" title="INNERSCOPE" data-i18n="text,title">INNERSCOPE</a>
+                        <div class="settings-menu-wrapper">
+                            <!-- INCLUDE partials/settings-toolbar-controls.html -->
+                            <div id="settings_menu" class="settings-menu" style="display: none;">
+                                <!-- INCLUDE partials/settings-menu-common-mid.html -->
+                                <!-- INCLUDE partials/settings-menu-trailing-admin.html -->
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <section id="branch_tree_examples" class="page-examples-section"></section>
+
+                <section class="input-section">
+                    <div class="chat-prompt-panel">
+                        <div class="input-header">
+                            <span class="semantic-submode-label" data-i18n>Prefix</span>
+                            <div class="text-action-buttons-top">
+                                <div class="textarea-counter" id="branch_tree_raw_text_count_display">
+                                    <span id="branch_tree_raw_text_count_value">0</span> <span data-i18n>chars</span>
+                                </div>
+                                <button type="button" id="branch_tree_clear_raw_btn" class="text-action-btn" data-i18n>Clear</button>
+                                <button type="button" id="branch_tree_paste_raw_btn" class="text-action-btn" data-i18n>Paste</button>
+                            </div>
+                        </div>
+                        <div class="textarea-wrapper chat-prompt-textarea-block">
+                            <textarea id="branch_tree_raw_text"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="textarea-wrapper chat-prompt-actions-row">
+                        <div class="button-group">
+                            <div class="button-left">
+                                <div class="button-left-primary">
+                                    <button type="button" id="branch_tree_submit_btn" class="primary-btn inactive" disabled data-i18n>Start</button>
+                                    <div class="loadersmall loader-small-container"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </section>
+
+        <div class="resizer" id="resizer"></div>
+
+        <section class="right_panel">
+            <div id="branch_tree_container" class="branch-tree-container">
+                <div id="branch_tree_surface" class="branch-tree-surface"></div>
+                <div id="branch_tree_limit_message" class="branch-tree-limit-message"></div>
+            </div>
+        </section>
+    </main>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="vendor.js"></script>
+    <script src="branch_tree.js"></script>
+
+</body>
+
+</html>

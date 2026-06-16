@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="description"
+        content="信息透镜——探索大模型内部的可视化工具箱。因果流、信息高亮、上下文归因、逐层解码、分支树、原始对话">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="home.css">
+</head>
+
+<body class="nav-landing-page">
+
+    <div class="nav-landing-settings settings-menu-wrapper">
+        <!-- INCLUDE partials/settings-toolbar-controls.html -->
+        <div id="settings_menu" class="settings-menu" style="display: none;">
+            <!-- INCLUDE partials/settings-menu-common-mid.html -->
+            <!-- INCLUDE partials/settings-menu-trailing-admin.html -->
+        </div>
+    </div>
+
+    <main class="nav-landing-main">
+        <!-- Hero Section -->
+        <header class="nav-landing-hero">
+            <div class="nav-landing-hero-grid">
+                <div class="nav-landing-hero-text">
+                    <h1 class="nav-landing-title" data-page-title data-i18n></h1>
+                    <p class="nav-landing-subtitle" data-page-subtitle data-i18n></p>
+                </div>
+                <div class="nav-landing-hero-lens">
+                    <!-- InfoLens Aperture SVG -->
+                    <svg class="lens-aperture" viewBox="0 0 120 120" aria-hidden="true">
+                        <circle cx="60" cy="60" r="55" class="lens-aperture-blade"/>
+                        <circle cx="60" cy="60" r="40" class="lens-aperture-blade"/>
+                        <circle cx="60" cy="60" r="25" class="lens-aperture-blade"/>
+                        <circle cx="60" cy="60" r="48" class="lens-aperture-ring"/>
+                        <path d="M60,5 L63,25 L57,25 Z" class="lens-aperture-blade" opacity="0.3"/>
+                        <path d="M60,5 L63,25 L57,25 Z" class="lens-aperture-blade" opacity="0.3" transform="rotate(60 60 60)"/>
+                        <path d="M60,5 L63,25 L57,25 Z" class="lens-aperture-blade" opacity="0.3" transform="rotate(120 60 60)"/>
+                        <path d="M60,5 L63,25 L57,25 Z" class="lens-aperture-blade" opacity="0.3" transform="rotate(180 60 60)"/>
+                        <path d="M60,5 L63,25 L57,25 Z" class="lens-aperture-blade" opacity="0.3" transform="rotate(240 60 60)"/>
+                        <path d="M60,5 L63,25 L57,25 Z" class="lens-aperture-blade" opacity="0.3" transform="rotate(300 60 60)"/>
+                    </svg>
+                </div>
+            </div>
+        </header>
+
+        <!-- Module Grid -->
+        <nav class="nav-landing-module-grid" aria-label="App pages">
+            <a class="nav-landing-module-cell" href="causal_flow.html" target="_blank" rel="noopener" data-nav-page="causalFlow" data-i18n="title"></a>
+            <a class="nav-landing-module-cell" href="analysis.html" target="_blank" rel="noopener" data-nav-page="analysis" data-i18n="title"></a>
+            <a class="nav-landing-module-cell" href="attribution.html" target="_blank" rel="noopener" data-nav-page="attribution" data-i18n="title"></a>
+            <a class="nav-landing-module-cell" href="logit_lens.html" target="_blank" rel="noopener" data-nav-page="logitLens" data-i18n="title"></a>
+            <a class="nav-landing-module-cell" href="branch_tree.html" target="_blank" rel="noopener" data-nav-page="branchTree" data-i18n="title"></a>
+            <a class="nav-landing-module-cell" href="chat.html" target="_blank" rel="noopener" data-nav-page="chat" data-i18n="title"></a>
+        </nav>
+    </main>
+
+    <script src="vendor.js"></script>
+    <script src="home.js"></script>
+</body>
+
+</html>

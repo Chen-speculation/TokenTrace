@@ -1,0 +1,1276 @@
+swagger: '2.0'
+info:
+  title: InfoRadar API
+  version: "0.1"
+consumes:
+  - application/json
+produces:
+  - application/json
+
+basePath: /api
+
+paths:
+
+  /analyze:
+    post:
+      tags:
+        - all
+      summary: analyze text
+      operationId: server.analyze
+      parameters:
+        - in: body
+          name: analyze_request
+          description: request analyze
+          schema:
+            $ref: "#/definitions/AnalyzeRequest"
+
+      responses:
+        200:
+          description: |
+            成功时为信息密度分析结果。`stream=false`（默认）时响应体即本 schema；
+            `stream=true` 时为 `text/event-stream`，最后一条 `data` 事件内为同形 JSON。
+            业务错误（4xx/5xx）时响应体含 `success`/`message` 等，见各状态码说明，非本 schema。
+          schema:
+            $ref: "#/definitions/AnalyzeResponse"
+        400:
+          description: invalid request payload (missing text or model)
+        404:
+          description: requested model is not registered
+        500:
+          description: model inference failed
+        503:
+          description: requested model could not be loaded
+
+  /list_demos:
+    get:
+      tags:
+        - all
+      summary: list all available demo files and folders
+      operationId: server.list_demos
+      parameters:
+        - in: query
+          name: path
+          type: string
+          required: false
+          description: path to list (empty string for root)
+      responses:
+        200:
+          description: return list of demo files and folders
+          schema:
+            type: object
+            properties:
+              path:
+                type: string
+                description: current path
+              items:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      enum: [folder, file]
+                      description: item type
+                    name:
+                      type: string
+                      description: item name
+                    path:
+                      type: string
+                      description: full path
+                    file:
+                      type: string
+                      description: relative file path (only for files)
+
+  /save_demo:
+    post:
+      tags:
+        - all
+      summary: save demo file
+      operationId: server.save_demo
+      parameters:
+        - in: body
+          name: save_request
+          description: request to save demo
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: demo name (will be used as filename)
+              data:
+                type: object
+                description: AnalyzeResponse data to save
+              path:
+                type: string
+                description: "target folder path (default: \"/\" for root directory)"
+                default: "/"
+            required:
+              - name
+              - data
+      responses:
+        200:
+          description: return save result
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              message:
+                type: string
+              file:
+                type: string
+                description: saved filename
+
+  /delete_demo:
+    post:
+      tags:
+        - all
+      summary: delete demo file
+      operationId: server.delete_demo
+      parameters:
+        - in: body
+          name: delete_request
+          description: request to delete demo
+          schema:
+            type: object
+            properties:
+              file:
+                type: string
+                description: demo filename (with .json extension)
+            required:
+              - file
+      responses:
+        200:
+          description: return delete result
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              message:
+                type: string
+
+  /move_demo:
+    post:
+      tags:
+        - all
+      summary: move demo file or folder
+      operationId: server.move_demo
+      parameters:
+        - in: body
+          name: move_request
+          description: request to move demo or folder
+          schema:
+            type: object
+            properties:
+              file:
+                type: string
+                description: file path (for moving files)
+              path:
+                type: string
+                description: folder path (for moving folders)
+              target_path:
+                type: string
+                description: target folder path (empty string for root)
+            required:
+              - target_path
+      responses:
+        200:
+          description: return move result
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              message:
+                type: string
+
+  /rename_demo:
+    post:
+      tags:
+        - all
+      summary: rename demo file
+      operationId: server.rename_demo
+      parameters:
+        - in: body
+          name: rename_request
+          description: request to rename demo file
+          schema:
+            type: object
+            properties:
+              file:
+                type: string
+                description: file path
+              new_name:
+                type: string
+                description: new name (without extension)
+            required:
+              - file
+              - new_name
+      responses:
+        200:
+          description: return rename result
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              message:
+                type: string
+
+  /rename_folder:
+    post:
+      tags:
+        - all
+      summary: rename folder
+      operationId: server.rename_folder
+      parameters:
+        - in: body
+          name: rename_request
+          description: request to rename folder
+          schema:
+            type: object
+            properties:
+              path:
+                type: string
+                description: folder path
+              new_name:
+                type: string
+                description: new folder name
+            required:
+              - path
+              - new_name
+      responses:
+        200:
+          description: return rename result
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              message:
+                type: string
+
+  /delete_folder:
+    post:
+      tags:
+        - all
+      summary: delete folder
+      operationId: server.delete_folder
+      parameters:
+        - in: body
+          name: delete_request
+          description: request to delete folder
+          schema:
+            type: object
+            properties:
+              path:
+                type: string
+                description: folder path
+            required:
+              - path
+      responses:
+        200:
+          description: return delete result
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              message:
+                type: string
+
+  /list_all_folders:
+    get:
+      tags:
+        - all
+      summary: list all folders for move operation
+      operationId: server.list_all_folders
+      responses:
+        200:
+          description: return list of all folders
+          schema:
+            type: object
+            properties:
+              folders:
+                type: array
+                items:
+                  type: string
+                description: list of folder paths
+
+  /create_folder:
+    post:
+      tags:
+        - all
+      summary: create a new folder
+      operationId: server.create_folder_api
+      parameters:
+        - in: body
+          name: create_request
+          description: request to create folder
+          schema:
+            type: object
+            properties:
+              parent_path:
+                type: string
+                description: 'parent folder path (default: "/" for root directory)'
+                default: "/"
+              folder_name:
+                type: string
+                description: new folder name
+            required:
+              - folder_name
+      responses:
+        200:
+          description: return create result
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              message:
+                type: string
+
+  /fetch_url:
+    post:
+      tags:
+        - all
+      summary: fetch text content from URL
+      operationId: server.fetch_url
+      parameters:
+        - in: body
+          name: fetch_request
+          description: request to fetch text from URL
+          schema:
+            type: object
+            properties:
+              url:
+                type: string
+                description: URL to fetch text from
+            required:
+              - url
+      responses:
+        200:
+          description: return fetched text content
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              text:
+                type: string
+                description: extracted text content
+              url:
+                type: string
+                description: original URL
+              char_count:
+                type: integer
+                description: character count of extracted text
+              message:
+                type: string
+                description: error message if success is false
+        400:
+          description: invalid request (missing url or invalid URL format)
+        500:
+          description: failed to fetch or extract text from URL
+
+  /client-activity:
+    post:
+      tags:
+        - all
+      summary: anonymous client activity heartbeat
+      operationId: server.client_activity_report
+      parameters:
+        - in: body
+          name: activity_body
+          required: false
+          schema:
+            type: object
+            properties:
+              page_path:
+                type: string
+                description: pathname+search；汇总按去掉 ?/# 的路径末段，逐条日志里 path 仍带 query（unquote）
+              total_active_sec:
+                type: integer
+              delta_active_sec:
+                type: integer
+              client_os:
+                type: string
+                description: 首轮心跳附带；ios / android / windows / macos / linux / unknown
+            description: |
+              有效心跳计入访问统计与在线估计。请求头带有效 X-Admin-Token 时仅返回 online_now，不计入统计。
+      responses:
+        200:
+          description: acknowledged; includes estimated online_now after valid heartbeat
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              online_now:
+                type: integer
+              online_window_sec:
+                type: integer
+
+  /check_admin:
+    post:
+      tags:
+        - all
+      summary: check admin token
+      operationId: server.check_admin
+      parameters:
+        - in: body
+          name: check_request
+          description: request to check admin token
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+                description: admin token to check
+            required:
+              - token
+      responses:
+        200:
+          description: return check result
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              message:
+                type: string
+
+  /available_models:
+    get:
+      tags:
+        - all
+      summary: get available models
+      operationId: server.get_available_models
+      responses:
+        200:
+          description: return list of available models
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              models:
+                type: array
+                items:
+                  type: string
+
+  /current_model:
+    get:
+      tags:
+        - all
+      summary: get current model
+      operationId: server.get_current_model
+      responses:
+        200:
+          description: return current model name and quantization config
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              model:
+                type: string
+              switching:
+                type: boolean
+              device_type:
+                type: string
+                enum: [cpu, cuda, mps]
+                description: current device type
+              use_int8:
+                type: boolean
+                description: whether INT8 quantization is enabled
+              use_bfloat16:
+                type: boolean
+                description: whether bfloat16 is enabled (CPU only)
+
+  /prediction-attribute:
+    post:
+      tags:
+        - all
+      summary: prediction attribute
+      operationId: server.prediction_attribute
+      parameters:
+        - in: body
+          name: attribution_request
+          schema:
+            type: object
+            properties:
+              context:
+                type: string
+                description: 输入上下文文本（不做 trim；token 数不得超过 2000，否则 400）
+              target_prediction:
+                type: string
+                description: 目标预测文本，取首个 token 作为归因目标（不做 trim）。省略时自动使用 top-1（贪心解码）。
+              model:
+                type: string
+                enum: [base, instruct]
+                description: base 使用主槽位（--base_model），instruct 使用 instruct 槽位（--instruct_model）
+              source_page:
+                type: string
+                description: 发起页面 slug（analysis / chat / attribution / causal_flow）
+              flow_id:
+                type: string
+                description: 连续生成归因会话 ID；仅 source_page=causal_flow 时允许
+              flow_step:
+                type: integer
+                description: 连续生成归因步骤（从 0 开始）；仅 source_page=causal_flow 时允许
+            required:
+              - context
+              - model
+              - source_page
+      responses:
+        200:
+          description: 返回各输入 token 对目标预测的归因分
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              model:
+                type: string
+              target_token:
+                type: string
+                description: 归因目标 token 的字符串
+              target_prob:
+                type: number
+                description: 该 token 在 next-token 分布中的预测概率
+              token_attribution:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    offset:
+                      type: array
+                      items:
+                        type: integer
+                      description: 字符偏移 [start, end]
+                    raw:
+                      type: string
+                      description: token 原文
+                    score:
+                      type: number
+                      description: 梯度 L2 范数归因分
+              debug_info:
+                type: object
+                description: 下一 token 的 top10 与概率（与语义分析 debug_info 同形，无 abbrev）
+                properties:
+                  topk_tokens:
+                    type: array
+                    items:
+                      type: string
+                  topk_probs:
+                    type: array
+                    items:
+                      type: number
+              is_eos:
+                type: boolean
+                description: target_token 是否为模型的 EOS token（top-1 模式下尤为重要，客户端据此判断是否终止生成循环）
+        400:
+          description: 缺少必要字段、model 非法、context 超长、或 target 无法 tokenize
+        500:
+          description: 推理失败
+        503:
+          description: 服务繁忙
+
+  /ablation-attribute:
+    post:
+      tags:
+        - all
+      summary: ablation attribution
+      operationId: server.ablation_attribute
+      parameters:
+        - in: body
+          name: ablation_request
+          schema:
+            type: object
+            required:
+              - context
+              - model
+              - source_page
+            properties:
+              context:
+                type: string
+                description: 输入上下文文本（token 数不得超过 500，否则 400）
+              target_prediction:
+                type: string
+                description: 归因目标文本，取首个 token。省略时自动使用 top-1（贪心解码）。
+              target_token_id:
+                type: integer
+                description: 归因目标 token id（与 target_prediction 互斥）。
+              model:
+                type: string
+                enum: [base, instruct]
+                description: base 使用主槽位，instruct 使用 instruct 槽位
+              source_page:
+                type: string
+                description: 发起页面 slug（analysis / chat / attribution / causal_flow）
+              flow_id:
+                type: string
+                description: 连续归因会话 ID；仅 source_page=causal_flow 时允许
+              flow_step:
+                type: integer
+                description: 连续归因步骤（从 0 开始）；仅 source_page=causal_flow 时允许
+      responses:
+        200:
+          description: 返回各输入 token 对目标预测的消融归因分
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              model:
+                type: string
+              target_token:
+                type: string
+                description: 归因目标 token 的字符串
+              target_prob:
+                type: number
+                description: baseline 下该 token 的预测概率
+              token_attribution:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    offset:
+                      type: array
+                      items:
+                        type: integer
+                      description: 字符偏移 [start, end]
+                    raw:
+                      type: string
+                      description: token 原文
+                    score:
+                      type: number
+                      description: ΔP = baseline_prob − occluded_prob（可为负）
+                    delta_logit:
+                      type: number
+                      description: Δlogit = baseline_logit − occluded_logit（可选补充）
+              debug_info:
+                type: object
+                properties:
+                  topk_tokens:
+                    type: array
+                    items:
+                      type: string
+                  topk_probs:
+                    type: array
+                    items:
+                      type: number
+              is_eos:
+                type: boolean
+                description: target_token 是否为 EOS token
+        400:
+          description: 缺少必要字段、model 非法、context 超长、target 互斥或无法 tokenize
+        500:
+          description: 推理失败
+        503:
+          description: 服务繁忙
+
+  /logit-lens:
+    post:
+      tags:
+        - all
+      summary: logit lens
+      operationId: server.logit_lens
+      parameters:
+        - in: body
+          name: logit_lens_request
+          schema:
+            type: object
+            required:
+              - context
+              - model
+              - source_page
+            properties:
+              context:
+                type: string
+                description: 输入上下文文本（token 数不得超过 500，否则 400）
+              target_prediction:
+                type: string
+                description: 归因目标文本，取首个 token。省略时自动使用 top-1。
+              target_token_id:
+                type: integer
+                description: 归因目标 token id（与 target_prediction 互斥）。
+              model:
+                type: string
+                enum: [base, instruct]
+              source_page:
+                type: string
+              flow_id:
+                type: string
+              flow_step:
+                type: integer
+      responses:
+        200:
+          description: 逐层 Logit Lens 投影结果
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              model:
+                type: string
+              target_token:
+                type: string
+              n_layers:
+                type: integer
+                description: Transformer 层数 L（不含 embedding 层）
+              final_target_prob:
+                type: number
+                description: 最终层目标 token 概率
+              layers:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    layer:
+                      type: integer
+                    is_embedding:
+                      type: boolean
+                    topk_tokens:
+                      type: array
+                      items:
+                        type: string
+                    topk_probs:
+                      type: array
+                      items:
+                        type: number
+                    target_prob:
+                      type: number
+              debug_info:
+                type: object
+                properties:
+                  topk_tokens:
+                    type: array
+                    items:
+                      type: string
+                  topk_probs:
+                    type: array
+                    items:
+                      type: number
+              is_eos:
+                type: boolean
+        400:
+          description: 缺少必要字段、model 非法、context 超长、target 互斥
+        500:
+          description: 推理失败
+        503:
+          description: 服务繁忙
+
+  /branch-next:
+    post:
+      tags:
+        - all
+      summary: branch next token candidates
+      operationId: server.branch_next
+      parameters:
+        - in: body
+          name: branch_next_request
+          schema:
+            type: object
+            required:
+              - prefix
+              - model
+              - source_page
+            properties:
+              prefix:
+                type: string
+                description: 当前路径的前缀文本
+              model:
+                type: string
+                enum: [base, instruct]
+              source_page:
+                type: string
+              top_k:
+                type: integer
+                description: 返回候选数（默认 10，上限 50，超出自动 clamp）
+      responses:
+        200:
+          description: 下一 token 的 top-k 候选
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              model:
+                type: string
+              prefix_tokens:
+                type: integer
+                description: prefix 的 token 数
+              candidates:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    token:
+                      type: string
+                    token_id:
+                      type: integer
+                    prob:
+                      type: number
+              is_context_full:
+                type: boolean
+                description: prefix 是否已占满上下文（前端据此禁用展开）
+        400:
+          description: 缺少必要字段、model 非法、prefix 超出上下文上限
+        500:
+          description: 推理失败
+        503:
+          description: 服务繁忙
+
+  /tokenize:
+    post:
+      tags:
+        - all
+      summary: tokenize text
+      description: |
+        对 context 用指定 model 的 tokenizer 分词，返回各 token 的字符 offset 与原文。
+        不持有推理锁，不做前向 / 梯度计算，响应极快。
+      operationId: server.tokenize
+      parameters:
+        - in: body
+          name: tokenize_request
+          required: true
+          schema:
+            type: object
+            required:
+              - context
+              - model
+            properties:
+              context:
+                type: string
+                description: 待分词文本
+              model:
+                type: string
+                enum: [base, instruct]
+                description: base 使用主槽位 tokenizer，instruct 使用语义槽位 tokenizer
+      responses:
+        200:
+          description: 分词结果
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              spans:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    offset:
+                      type: array
+                      items:
+                        type: integer
+                      description: 字符偏移 [start, end]
+                    raw:
+                      type: string
+                      description: token 原文
+        400:
+          description: 缺少必要字段或 model 非法
+
+  /analyze-semantic:
+    post:
+      tags:
+        - all
+      summary: analyze semantic (token-level relevance to query)
+      operationId: server.analyze_semantic
+      parameters:
+        - in: body
+          name: semantic_request
+          schema:
+            type: object
+            properties:
+              query:
+                type: string
+                description: 查询主题
+              text:
+                type: string
+                description: 原文
+              stream:
+                type: boolean
+                description: 是否使用 SSE 流式响应（带阶段级进度）
+              submode:
+                type: string
+                enum: [count, match_score, fill_blank]
+                description: 可选子模式，不传则用服务端默认。match_score 已废弃
+              debug_info:
+                type: boolean
+                description: 为 true 时响应包含 debug_info（abbrev、topk_tokens、topk_probs），默认关，不传则不返回
+            required:
+              - query
+              - text
+      responses:
+        200:
+          description: 返回 model 和 token_attention
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              model:
+                type: string
+                description: 使用的 semantic 模型名
+              token_attention:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    offset:
+                      type: array
+                      items:
+                        type: integer
+                      description: 原文中的字符偏移 [start, end]
+                    raw:
+                      type: string
+                      description: token 原文
+                    score:
+                      type: number
+                      description: 对 prompt 区域的平均关注度
+              debug_info:
+                type: object
+                description: 请求中 debug_info=true 时返回
+                properties:
+                  abbrev:
+                    type: string
+                    description: 推理原文缩写
+                  topk_tokens:
+                    type: array
+                    items:
+                      type: string
+                    description: top10 预测 token 列表
+                  topk_probs:
+                    type: array
+                    items:
+                      type: number
+                    description: top10 对应的概率
+              message:
+                type: string
+        400:
+          description: 缺少 query 或 text 参数
+        500:
+          description: 分析失败
+
+  /switch_model:
+    post:
+      tags:
+        - all
+      summary: switch model (admin only)
+      operationId: server.switch_model
+      parameters:
+        - in: body
+          name: switch_request
+          description: request to switch model with quantization options
+          schema:
+            type: object
+            properties:
+              model:
+                type: string
+                description: target model name
+              use_int8:
+                type: boolean
+                description: enable INT8 quantization (not supported on MPS)
+                default: false
+              use_bfloat16:
+                type: boolean
+                description: enable bfloat16 (CPU only)
+                default: false
+            required:
+              - model
+      responses:
+        200:
+          description: return switch result
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              message:
+                type: string
+              model:
+                type: string
+        400:
+          description: invalid request or incompatible quantization settings
+        404:
+          description: model not found
+        500:
+          description: model switch failed
+        503:
+          description: model switching in progress
+
+  /v1/completions/prompt:
+    post:
+      tags:
+        - openai
+      summary: Apply chat template to user text (completion prompt assembly)
+      description: |
+        将 messages 经 tokenizer.apply_chat_template 封装，返回实际送入 POST /v1/completions 的完整字符串（JSON 字段 prompt_used）。
+        可选 tools、enable_thinking。与续写共用 semantic 模型/tokenizer；过长时返回 400。
+      operationId: server.completions_prompt
+      parameters:
+        - in: body
+          name: completions_prompt_request
+          required: true
+          schema:
+            $ref: "server_openai_definitions.yaml#/definitions/OpenAICompletionsPromptRequest"
+      responses:
+        200:
+          description: ok
+          schema:
+            $ref: "server_openai_definitions.yaml#/definitions/OpenAICompletionsPromptResponse"
+        400:
+          description: invalid body or prompt too long
+
+  /v1/completions/prompt-incremental:
+    post:
+      tags:
+        - openai
+      summary: Compute wire incremental suffix for a tool response
+      description: |
+        多轮 wire 模式下，计算追加 tool response 及下一轮 generation scaffold 的字面量后缀（incremental_suffix）。
+        仅依赖 tool_content 和 enable_thinking，与前序 wire 历史内容无关。
+      operationId: server.completions_prompt_incremental
+      parameters:
+        - in: body
+          name: completions_prompt_incremental_request
+          required: true
+          schema:
+            $ref: "server_openai_definitions.yaml#/definitions/OpenAICompletionsPromptIncrementalRequest"
+      responses:
+        200:
+          description: ok
+          schema:
+            $ref: "server_openai_definitions.yaml#/definitions/OpenAICompletionsPromptIncrementalResponse"
+        400:
+          description: invalid body
+        500:
+          description: template extraction failed
+
+  /v1/completions:
+    post:
+      tags:
+        - openai
+      summary: OpenAI-compatible text completion (minimal v1)
+      description: |
+        与 OpenAI POST /v1/completions 对齐（见 platform.openai.com Completions）。
+        必填 model、prompt；prompt 须为已确定的完整模型输入（需 chat template 时请先 POST /v1/completions/prompt）。
+        本接口响应恒为 text/event-stream（忽略 body 中的 stream 字段）：type=delta…，末条 type=result，其 data 与 OpenAICompletionsResponse 同形（含 choices[0].text、info_radar.bpe_strings）；若需「非流式」语义，由客户端消费 SSE 末条 result 即可。
+      operationId: server.completions
+      parameters:
+        - in: body
+          name: completions_request
+          required: true
+          schema:
+            $ref: "server_openai_definitions.yaml#/definitions/OpenAICompletionsRequest"
+      responses:
+        200:
+          description: |
+            text/event-stream（SSE）；末条事件的 data 与 OpenAICompletionsResponse 同形。
+          schema:
+            $ref: "server_openai_definitions.yaml#/definitions/OpenAICompletionsResponse"
+        400:
+          description: invalid request body
+
+  /v1/completions/stop:
+    post:
+      tags:
+        - openai
+      summary: Global completions stop (single-user serial)
+      description: |
+        置位全局停止标志，使当前正在进行的续写尽快结束（与单次 SSE 断开/GeneratorExit 叠加）。
+        单用户串行场景下无需 request_id；新一次 POST /v1/completions 开始时清除该标志。
+      operationId: server.completions_stop
+      responses:
+        200:
+          description: ok
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+
+
+  /visit_stats:
+    get:
+      tags:
+        - all
+      summary: get visit statistics (admin only)
+      operationId: server.get_visit_stats
+      responses:
+        200:
+          description: |
+            返回当前累计快照（_base + 本进程内存增量）。
+            窗口内未提交的增量仅以与 stats_total.json 相同字段结构的记录写入 Dataset 的 stats_delta/*.json。
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              totals:
+                type: object
+                description: |
+                  page_loads（GET /client/*.html，一次实际 HTML 响应计一次，与访问日志「📄 页面访问」一致）；active_visits（至少有一次有效活跃心跳的页面访问数，每页以 delta_active_sec == total_active_sec 的首轮上报计一次）。
+              os:
+                type: object
+              page_sec:
+                type: object
+              api:
+                type: object
+              saved_at:
+                type: string
+              startup_base:
+                type: object
+                description: |
+                  进程启动时（_load_base 完成后）_base 的深拷贝；前端用 totals − startup_base 计算自启动以来的增量。
+              process_start_at:
+                type: string
+                description: |
+                  统计线程完成 _load_base 并拍下 startup_base 时的 UTC 时间（与 saved_at 相同格式）。
+              reset_base:
+                type: object
+                description: |
+                  最近一次手动 reset 时的全量快照；前端用 totals − reset_base 计算自 reset 以来的增量。
+              reset_at:
+                type: string
+                description: |
+                  最近一次手动 reset 的 UTC 时间；从未 reset 时为 null。
+              online_now:
+                type: integer
+                description: |
+                  最近 online_window_sec 内 client-activity 心跳数按每 10s 一次折算的当前在线估计（ceil）；进程内存，重启清零。
+              online_window_sec:
+                type: integer
+                description: 在线估计滑动窗口秒数（当前为 20）。
+
+  /visit_stats/active_visits_timeline:
+    get:
+      tags:
+        - all
+      summary: active visits and active time per UTC hour (admin only)
+      operationId: server.get_visit_stats_active_visits_timeline
+      responses:
+        200:
+          description: hourly bins from stats_delta and unpersisted session increment
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              bins:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    hour:
+                      type: string
+                      description: UTC hour start, e.g. 2025-06-03T12:00:00Z
+                    active_visits:
+                      type: integer
+                    active_sec:
+                      type: integer
+                      description: sum of page active seconds in this UTC hour bucket
+        503:
+          description: HF token missing or Hub unavailable
+
+  /visit_stats/reset:
+    post:
+      tags:
+        - all
+      summary: reset delta base (admin only)
+      operationId: server.post_visit_stats_reset
+      responses:
+        200:
+          description: reset base saved
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+        500:
+          description: persist failed
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              error:
+                type: string
+
+definitions:
+  # 与 client generatedSchemas TokenWithOffset 一致；信息密度 analyze 与 completions info_radar 共用
+  TokenWithOffset:
+    type: object
+    properties:
+      offset:
+        type: array
+        description: |
+          字符下标 [start, end)：信息密度分析相对 request.text；
+          completions 的 info_radar 相对续写全文 choices[0].text。
+        items:
+          type: integer
+        minItems: 2
+        maxItems: 2
+      raw:
+        type: string
+      real_topk:
+        type: array
+        description: "[模型排序名次, 该 token 的 softmax 概率]"
+        items:
+          type: number
+        minItems: 2
+        maxItems: 2
+      pred_topk:
+        type: array
+        description: 该位置 logits softmax 后的 top-N 候选 [token 文本, 概率]（N 由服务端 DEFAULT_TOPK 决定）
+
+  # 与 client generatedSchemas AnalyzeResult 一致；成功路径下 backend.api.analyze._build_response
+  AnalyzeResult:
+    type: object
+    required:
+      - bpe_strings
+    properties:
+      model:
+        type: string
+      bpe_strings:
+        type: array
+        items:
+          $ref: "#/definitions/TokenWithOffset"
+      error:
+        type: string
+        x-nullable: true
+
+  AnalyzeResponse:
+    type: object
+    required:
+      - request
+      - result
+    properties:
+      request:
+        type: object
+        required:
+          - text
+        properties:
+          text:
+            type: string
+            description: 与请求中分析的原文一致（响应中仅回显 text）
+      result:
+        $ref: "#/definitions/AnalyzeResult"
+
+  AnalyzeRequest:
+    type: object
+    required:
+      - model
+      - text
+    properties:
+      model:
+        type: string
+      text:
+        type: string
+      stream:
+        type: boolean
+        description: 是否使用 SSE 流式响应

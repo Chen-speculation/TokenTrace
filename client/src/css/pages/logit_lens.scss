@@ -1,0 +1,193 @@
+@use 'app-pages';
+@use "chat-input-panel";
+@use "breakpoints" as *;
+@use '../base/narrow-ios-form-font-tail' as ios-form-font;
+
+// Logit Lens 独立页面样式
+
+.logit-lens-main {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.logit-lens-panel {
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: var(--bg-elevated);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.logit-lens-heatmap {
+  margin-top: 8px;
+  overflow-x: auto;
+}
+
+.logit-lens-heatmap-table {
+  border-collapse: collapse;
+  font-size: 12px;
+  width: 100%;
+}
+
+.logit-lens-heatmap-table th,
+.logit-lens-heatmap-table td {
+  padding: 4px 6px;
+  text-align: center;
+  border: 1px solid var(--border-color);
+  white-space: nowrap;
+}
+
+.logit-lens-heatmap-table th {
+  background: var(--bg-secondary);
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.logit-lens-heatmap-table td {
+  cursor: default;
+}
+
+.logit-lens-trajectory {
+  margin-top: 12px;
+  height: 160px;
+}
+
+.logit-lens-disclaimer {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 8px;
+  padding: 4px 6px;
+  border-left: 2px solid var(--border-color);
+}
+
+// Target prediction 面板与上方 Context 面板之间的间距
+.logit-lens-target-panel {
+  margin-top: 12px;
+}
+
+// Target prediction 输入框较矮
+.logit-lens-target-panel .textarea-wrapper textarea {
+  height: 60px;
+}
+
+// Analyze 行下方信息
+#logit_lens_result_info {
+  white-space: pre-line;
+  text-align: center;
+}
+
+// ---- 折线图说明 ----
+.logit-lens-chart-hint {
+  font-size: 9pt;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+// ---- 层卡片 ----
+.ll-layer-card {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+.ll-layer-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.ll-layer-code {
+  font-size: 10pt;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-color);
+}
+
+.ll-layer-desc {
+  font-size: 9pt;
+  color: var(--text-muted);
+}
+
+.ll-rank-badge {
+  font-size: 9pt;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+  margin-left: auto;
+}
+
+.ll-rank-top {
+  color: #B45309;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.ll-rank-other {
+  color: var(--text-muted);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-color);
+}
+
+.ll-bars {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 20px;
+}
+
+@media (max-width: 500px) {
+  .ll-bars { grid-template-columns: 1fr; }
+}
+
+.ll-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 9pt;
+}
+
+.ll-bar-label {
+  width: 80px;
+  flex-shrink: 0;
+  font-family: var(--font-family-mono, monospace);
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ll-bar-label--target {
+  color: #B45309;
+  font-weight: 700;
+}
+
+.ll-bar-track {
+  flex: 1;
+  height: 6px;
+  background: var(--bg-elevated);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.ll-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.2s ease;
+}
+
+.ll-bar-pct {
+  width: 42px;
+  flex-shrink: 0;
+  text-align: right;
+  font-family: var(--font-family-mono, monospace);
+  color: var(--text-muted);
+  font-size: 8.5pt;
+}
+
+@include ios-form-font.apply;

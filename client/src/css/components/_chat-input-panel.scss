@@ -1,0 +1,163 @@
+// Chat / Attribution / Causal flow 共用的左栏 prompt 输入区样式
+@use 'breakpoints' as *;
+@use 'query-history-dropdown' as qh;
+
+.input-section > .chat-raw-prompt-mode-row {
+  margin-bottom: 0;
+}
+
+// Prompt 区选项标签：panel 标题、勾选行同系（9pt + 勾选主次色）
+.input-section {
+  span.semantic-submode-label {
+    color: var(--text-muted);
+  }
+
+  .semantic-submode-row:not(.attribution-exclude-prompt-patterns-header):not(.attribution-exclude-generated-patterns-header):not(.attribution-delete-prompt-patterns-header) {
+    label.semantic-submode-label {
+      color: var(--text-primary);
+    }
+
+    label.semantic-submode-label:has(> input[type='checkbox']:not(:checked)) {
+      color: var(--text-muted);
+    }
+  }
+
+  .chat-prompt-panel > .input-header > .semantic-submode-label {
+    font-size: 9pt;
+  }
+
+  // System 在 input-header 内（非 semantic-submode-row）
+  .chat-prompt-panel > .input-header label.chat-use-system-label.semantic-submode-label {
+    font-size: 9pt;
+
+    input[type='checkbox'] {
+      margin: 0;
+      flex-shrink: 0;
+    }
+
+    &:has(> input[type='checkbox']:not(:checked)) {
+      color: var(--text-muted);
+    }
+
+    &:has(> input[type='checkbox']:checked) {
+      color: var(--text-primary);
+    }
+  }
+}
+
+.input-section .textarea-wrapper.chat-prompt-actions-row .chat-completion-options-row {
+  margin-bottom: 8px;
+  width: 100%;
+}
+
+.chat-prompt-panel + .chat-prompt-panel {
+  margin-top: 12px;
+}
+
+.chat-use-system-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+}
+
+.text-metrics-chat #metric_usage .text-metrics-api-usage {
+  font-size: inherit;
+  line-height: inherit;
+  opacity: 1;
+}
+
+.chat-cached-history-bar {
+  margin-bottom: 12px;
+}
+
+.chat-cached-history-bar .chat-prompt-history-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.chat-prompt-history-wrapper {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.chat-prompt-history-wrapper .semantic-search-history-dropdown {
+  @include qh.query-history-dropdown;
+}
+
+.input-section .textarea-wrapper textarea {
+  height: 250px;
+}
+
+.input-section .textarea-wrapper textarea#chat_system_text,
+.input-section .textarea-wrapper textarea#gen_attr_system_text {
+  height: 36px;
+  min-height: 36px;
+}
+
+.input-section .attribution-exclude-prompt-patterns-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 4px 8px;
+  line-height: 1.35;
+  height: 2.6em;
+  min-height: 2.6em;
+  max-height: 12em;
+  resize: vertical;
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+  background: var(--input-bg);
+  color: var(--text-color);
+}
+
+@media (min-width: $breakpoint-tablet) {
+  .input-section .textarea-wrapper textarea {
+    font-size: calc(var(--font-size-base) + 2pt);
+  }
+}
+
+@media (max-width: $breakpoint-mobile) {
+  .input-section .textarea-wrapper textarea {
+    min-height: 80px;
+    max-height: none;
+    height: auto;
+    field-sizing: content;
+  }
+}
+
+// Teacher forcing（Chat / Causal flow 共用）
+.teacher-forcing-row {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.input-section .textarea-wrapper textarea.teacher-forcing-text {
+  height: 90px;
+  min-height: 60px;
+  max-height: 250px;
+}
+
+.teacher-forcing-toggle-row label.semantic-submode-label,
+.teacher-forcing-block.chat-prompt-panel .stop-after-tf-row label.semantic-submode-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.teacher-forcing-block.chat-prompt-panel .stop-after-tf-row {
+  margin-top: 8px;
+}
+
+.input-section > .textarea-wrapper.chat-prompt-actions-row {
+  margin-top: 10px;
+}
