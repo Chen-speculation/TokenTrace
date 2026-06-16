@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="logit_lens.css">
+</head>
+
+<body>
+
+    <main class="main_frame">
+        <section class="left_panel">
+            <div class="floating_content">
+                <header class="app-page-toolbar app-page-toolbar--bleed">
+                    <h1 class="page-toolbar-title"><span class="title-main-line"><span data-page-title data-i18n></span><span class="title-tagline" data-page-subtitle data-i18n></span></span></h1>
+                    <div class="app-page-toolbar-actions">
+                        <a href="index.html" class="home-link" title="INNERSCOPE" data-i18n="text,title">INNERSCOPE</a>
+                        <div class="settings-menu-wrapper">
+                            <!-- INCLUDE partials/settings-toolbar-controls.html -->
+                            <div id="settings_menu" class="settings-menu" style="display: none;">
+                                <!-- INCLUDE partials/settings-menu-common-mid.html -->
+                                <!-- INCLUDE partials/settings-menu-trailing-admin.html -->
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <section id="logit_lens_examples" class="page-examples-section"></section>
+
+                <section class="input-section">
+                    <div class="chat-prompt-panel">
+                        <div class="input-header">
+                            <span data-i18n>Context</span>
+                            <div class="text-action-buttons-top">
+                                <div class="textarea-counter" id="context_count_display">
+                                    <span id="context_count_value">0</span> <span data-i18n>chars</span>
+                                </div>
+                                <button type="button" id="clear_context_btn" class="text-action-btn" data-i18n>Clear</button>
+                                <button type="button" id="paste_context_btn" class="text-action-btn" data-i18n>Paste</button>
+                            </div>
+                        </div>
+                        <div class="textarea-wrapper chat-prompt-textarea-block">
+                            <textarea id="context_text"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="chat-prompt-panel logit-lens-target-panel">
+                        <div class="input-header">
+                            <span data-i18n>Target prediction</span>
+                            <div class="text-action-buttons-top">
+                                <div class="textarea-counter" id="target_count_display">
+                                    <span id="target_count_value">0</span> <span data-i18n>chars</span>
+                                </div>
+                                <button type="button" id="clear_target_btn" class="text-action-btn" data-i18n>Clear</button>
+                                <button type="button" id="paste_target_btn" class="text-action-btn" data-i18n>Paste</button>
+                            </div>
+                        </div>
+                        <div class="textarea-wrapper chat-prompt-textarea-block">
+                            <textarea id="target_text"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="textarea-wrapper chat-prompt-actions-row">
+                        <div class="semantic-submode-row attribution-model-variant-row">
+                            <span class="semantic-submode-group">
+                                <label class="semantic-submode-label" for="logit_lens_model_variant" data-i18n>Model</label>
+                                <select id="logit_lens_model_variant" class="semantic-submode-select" aria-label="Model slot" data-i18n="aria-label">
+                                    <option value="base">base</option>
+                                    <option value="instruct">instruct</option>
+                                </select>
+                            </span>
+                        </div>
+                        <div class="button-group">
+                            <div class="button-left">
+                                <div class="button-left-primary">
+                                    <button type="button" id="analyze_btn" class="primary-btn inactive" disabled data-i18n>Analyze</button>
+                                    <div class="loadersmall loader-small-container"></div>
+                                </div>
+                            </div>
+                            <div id="logit_lens_result_info" class="text-metrics is-hidden"></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </section>
+
+        <div class="resizer" id="resizer"></div>
+
+        <section class="right_panel">
+            <div class="logit-lens-panel" id="logit_lens_panel" style="display:none;">
+                <div class="attribution-panel-label" data-i18n>Logit Lens</div>
+                <div class="logit-lens-chart-hint" data-i18n>点击折线上的点，查看该层的候选词分布</div>
+                <div id="logit_lens_layer_heatmap" class="logit-lens-heatmap"></div>
+                <div id="logit_lens_target_trajectory" class="logit-lens-trajectory" style="height:auto;min-height:0"></div>
+                <div class="logit-lens-disclaimer" data-i18n>
+                    Projection readouts (final norm + lm_head applied to intermediate layers), not the model's literal per-layer computation.
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="vendor.js"></script>
+    <script src="logit_lens.js"></script>
+
+</body>
+
+</html>

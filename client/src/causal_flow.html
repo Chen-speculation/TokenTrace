@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="causal_flow.css">
+</head>
+
+<body class="gen-attribute-page">
+
+    <main class="main_frame">
+        <section class="left_panel">
+            <div class="floating_content">
+                <header class="app-page-toolbar app-page-toolbar--bleed">
+                    <h1 class="page-toolbar-title"><span class="title-main-line"><span data-page-title data-i18n></span><span class="title-tagline" data-page-subtitle data-i18n></span></span></h1>
+                    <div class="app-page-toolbar-actions">
+                        <a href="index.html" class="home-link" title="INNERSCOPE" data-i18n="text,title">INNERSCOPE</a>
+                        <div class="settings-menu-wrapper">
+                            <!-- INCLUDE partials/settings-toolbar-controls.html -->
+                            <div id="settings_menu" class="settings-menu" style="display: none;">
+                                <!-- INCLUDE partials/settings-menu-common-mid.html -->
+                                <!-- INCLUDE partials/settings-menu-trailing-admin.html -->
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="chat-cached-history-bar chat-cached-history-bar--dual">
+                    <div class="semantic-search-input-wrapper chat-prompt-history-wrapper gen-attr-cached-demos-wrap">
+                        <button type="button" id="gen_attr_cached_demos_btn" class="text-action-btn" data-i18n>Cached demo</button>
+                        <div class="gen-attr-cached-demos-picker">
+                            <button type="button" id="gen_attr_cached_demos_value_btn" class="gen-attr-cached-demos-value-btn"
+                                aria-label="Selected demo" aria-haspopup="listbox">
+                                <span id="gen_attr_cached_demos_value" class="gen-attr-cached-demos-value"></span>
+                                <span class="gen-attr-cached-demos-chevron" aria-hidden="true">▾</span>
+                            </button>
+                            <ul id="gen_attr_cached_demos_dropdown" class="semantic-search-history-dropdown"></ul>
+                        </div>
+                    </div>
+                    <div class="semantic-search-input-wrapper chat-prompt-history-wrapper gen-attr-cached-history-wrap">
+                        <button type="button" id="gen_attr_cached_history_btn" class="text-action-btn" data-i18n>Cached history</button>
+                        <ul id="gen_attr_cached_history_dropdown" class="semantic-search-history-dropdown"></ul>
+                    </div>
+                </div>
+
+                <section class="input-section">
+                    <div class="semantic-submode-row chat-raw-prompt-mode-row">
+                        <span class="semantic-submode-group">
+                            <label class="semantic-submode-label" for="gen_attr_skip_chat_template">
+                                <input type="checkbox" id="gen_attr_skip_chat_template" />
+                                <span data-i18n>Raw prompt mode</span>
+                            </label>
+                        </span>
+                    </div>
+
+                    <div id="gen_attr_raw_input_panel" class="chat-prompt-panel">
+                        <div class="input-header">
+                            <span class="semantic-submode-label" data-i18n>Raw prompt</span>
+                            <div class="text-action-buttons-top">
+                                <div class="textarea-counter" id="gen_attr_raw_text_count_display">
+                                    <span id="gen_attr_raw_text_count_value">0</span> <span data-i18n>chars</span>
+                                </div>
+                                <button type="button" id="gen_attr_clear_raw_btn" class="text-action-btn" data-i18n>Clear</button>
+                                <button type="button" id="gen_attr_paste_raw_btn" class="text-action-btn" data-i18n>Paste</button>
+                                <button type="button" id="gen_attr_raw_history_btn" class="text-action-btn" data-i18n>History</button>
+                            </div>
+                        </div>
+                        <div class="textarea-wrapper chat-prompt-textarea-block">
+                            <div class="semantic-search-input-wrapper chat-prompt-history-wrapper">
+                                <textarea id="gen_attr_raw_text"></textarea>
+                                <ul id="gen_attr_raw_input_history_dropdown" class="semantic-search-history-dropdown"></ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="gen_attr_chat_input_panel" hidden>
+                        <div class="chat-prompt-panel" id="gen_attr_system_prompt_panel">
+                            <div class="input-header">
+                                <label class="chat-use-system-label semantic-submode-label" for="gen_attr_use_system_prompt">
+                                    <input type="checkbox" id="gen_attr_use_system_prompt" checked />
+                                    <span data-i18n>System</span>
+                                </label>
+                                <div class="text-action-buttons-top">
+                                    <div class="textarea-counter" id="gen_attr_system_text_count_display">
+                                        <span id="gen_attr_system_text_count_value">0</span> <span data-i18n>chars</span>
+                                    </div>
+                                    <button type="button" id="gen_attr_clear_system_btn" class="text-action-btn" data-i18n>Clear</button>
+                                    <button type="button" id="gen_attr_paste_system_btn" class="text-action-btn" data-i18n>Paste</button>
+                                    <button type="button" id="gen_attr_system_history_btn" class="text-action-btn" data-i18n>History</button>
+                                </div>
+                            </div>
+                            <div class="textarea-wrapper chat-prompt-textarea-block">
+                                <div class="semantic-search-input-wrapper chat-prompt-history-wrapper">
+                                    <textarea id="gen_attr_system_text">You are a helpful assistant.</textarea>
+                                    <ul id="gen_attr_system_prompt_history_dropdown" class="semantic-search-history-dropdown"></ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tool_calling_options_mount"></div>
+                        <div class="chat-prompt-panel">
+                            <div class="input-header">
+                                <span class="semantic-submode-label" data-i18n>User</span>
+                                <div class="text-action-buttons-top">
+                                    <div class="textarea-counter" id="gen_attr_user_text_count_display">
+                                        <span id="gen_attr_user_text_count_value">0</span> <span data-i18n>chars</span>
+                                    </div>
+                                    <button type="button" id="gen_attr_clear_user_btn" class="text-action-btn" data-i18n>Clear</button>
+                                    <button type="button" id="gen_attr_paste_user_btn" class="text-action-btn" data-i18n>Paste</button>
+                                    <button type="button" id="gen_attr_user_history_btn" class="text-action-btn" data-i18n>History</button>
+                                </div>
+                            </div>
+                            <div class="textarea-wrapper chat-prompt-textarea-block">
+                                <div class="semantic-search-input-wrapper chat-prompt-history-wrapper">
+                                    <textarea id="gen_attr_user_text"></textarea>
+                                    <ul id="gen_attr_user_prompt_history_dropdown" class="semantic-search-history-dropdown"></ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="semantic-submode-row chat-enable-thinking-row">
+                            <span class="semantic-submode-group">
+                                <label class="semantic-submode-label" for="gen_attr_enable_thinking">
+                                    <input type="checkbox" id="gen_attr_enable_thinking" />
+                                    <span data-i18n>Enable thinking</span>
+                                </label>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="teacher-forcing-row">
+                        <div class="semantic-submode-row teacher-forcing-toggle-row">
+                            <span class="semantic-submode-group">
+                                <label class="semantic-submode-label"
+                                    title="When enabled, type the exact continuation after the assembled prompt. Each step attributes the next token toward that text (same tokenizer as Model), then stops when the continuation is consumed or EOS."
+                                    data-i18n="title">
+                                    <input type="checkbox" id="gen_attr_teacher_forcing_enable">
+                                    <span data-i18n>Teacher forcing</span>
+                                </label>
+                            </span>
+                        </div>
+                        <div id="gen_attr_teacher_forcing_block" class="chat-prompt-panel teacher-forcing-block" hidden>
+                            <div class="input-header">
+                                <span class="semantic-submode-label" data-i18n>Forced continuation</span>
+                                <div class="text-action-buttons-top">
+                                    <div class="textarea-counter" id="gen_attr_teacher_forcing_text_count_display">
+                                        <span id="gen_attr_teacher_forcing_text_count_value">0</span> <span data-i18n>chars</span>
+                                    </div>
+                                    <button type="button" id="gen_attr_clear_teacher_forcing_btn" class="text-action-btn" data-i18n>Clear</button>
+                                    <button type="button" id="gen_attr_paste_teacher_forcing_btn" class="text-action-btn" data-i18n>Paste</button>
+                                    <button type="button" id="gen_attr_teacher_forcing_history_btn" class="text-action-btn" data-i18n>History</button>
+                                </div>
+                            </div>
+                            <div class="textarea-wrapper chat-prompt-textarea-block">
+                                <div class="semantic-search-input-wrapper chat-prompt-history-wrapper">
+                                    <textarea id="gen_attr_teacher_forcing_text" class="teacher-forcing-text"
+                                        spellcheck="false" autocomplete="off"
+                                        title="Expected generated text after the full prompt. Each API step uses the first token of what remains here as the attribution target."
+                                        data-i18n="title"></textarea>
+                                    <ul id="gen_attr_teacher_forcing_history_dropdown" class="semantic-search-history-dropdown"></ul>
+                                </div>
+                            </div>
+                            <div class="semantic-submode-row stop-after-tf-row">
+                                <label class="semantic-submode-label"
+                                    title="When unchecked, generation continues with top-1 after teacher forcing tokens are exhausted, up to Max tokens."
+                                    data-i18n="title">
+                                    <input type="checkbox" id="gen_attr_stop_after_teacher_forcing">
+                                    <span data-i18n>Stop after teacher forcing</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="textarea-wrapper chat-prompt-actions-row">
+                        <!-- INCLUDE partials/completion-options-row.html -->
+                        <div class="button-group">
+                            <div class="button-left">
+                                <div class="button-left-primary">
+                                    <button type="button" id="gen_attr_submit_btn" class="primary-btn inactive" disabled>Start</button>
+                                    <div class="generation-status-slot loader-small-container">
+                                        <div class="loadersmall"></div>
+                                        <span id="gen_attr_complete_reason" class="generation-end-reason"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="gen_attr_text_metrics" class="text-metrics text-metrics-chat">
+                                <div id="gen_attr_metric_usage" class="text-metrics-secondary"></div>
+                                <div id="gen_attr_metric_model" class="text-metrics-secondary">model: </div>
+                            </div>
+                            <button type="button" id="gen_attr_export_demo_btn" class="primary-btn" style="display: none" title="Admin: download current run as JSON for bundled demos">Export demo</button>
+                        </div>
+                    </div>
+
+                    <div class="gen-attr-reset-ui-options-row">
+                        <button type="button" id="gen_attr_reset_ui_options_btn" class="text-action-btn"
+                            title="Restore DAG options, play speed, exclusions, etc. to defaults and clear saved preferences for those controls."
+                            data-i18n="text,title">
+                            Reset UI options
+                        </button>
+                    </div>
+
+                    <div class="gen-attr-dag-measure-width-row semantic-submode-row">
+                        <span class="semantic-submode-group semantic-submode-group--emphasis">
+                            <label class="semantic-submode-label" for="gen_attr_dag_layout_mode">DAG layout</label>
+                            <select id="gen_attr_dag_layout_mode"
+                                class="semantic-submode-select gen-attr-dag-layout-mode-select"
+                                title="Choose DAG layout. 'text-flow' follows text layout geometry; 'linear-arc' uses fixed-order linear nodes with arc links; 'linear-arc-step-down' is like linear-arc but drops each successive token vertically by CI (baseline = unscaled node height); 'spiral' lays nodes on an Archimedean spiral (for fun)."
+                                data-i18n="title">
+                                <option value="text-flow">text</option>
+                                <option value="linear-arc">linear-arc</option>
+                                <option value="linear-arc-step-down">step-down(beta)</option>
+                                <option value="spiral">spiral (for fun)</option>
+                            </select>
+                        </span>
+                        <span class="semantic-submode-group" id="gen_attr_dag_compactness_group">
+                            <label class="semantic-submode-label" for="gen_attr_dag_compactness" data-i18n>Compactness</label>
+                            <input type="number" id="gen_attr_dag_compactness" class="gen-attr-dag-measure-width-input"
+                                value="0.5" min="0.05" max="1" step="0.05"
+                                title="Scales DAG node boxes and labels relative to the measurement layer; 1 matches full readout scale. Applies in text-flow and spiral layouts. When idle, changes replay and fit automatically; during generation or DAG playback, the setting updates for the next run or refresh."
+                                data-i18n="title">
+                        </span>
+                        <span class="semantic-submode-group" id="gen_attr_dag_measure_width_group">
+                            <label class="semantic-submode-label" for="gen_attr_dag_measure_width">Text width</label>
+                            <input type="number" id="gen_attr_dag_measure_width" class="gen-attr-dag-measure-width-input"
+                                value="500" min="200" max="4000" step="10"
+                                title="Width (px) of the invisible measurement layer used for DAG layout. Only this width affects wrapping and node positions. When idle, changes replay and fit automatically; during generation or DAG playback, the setting updates for the next run or refresh."
+                                data-i18n="title">
+                            <span class="semantic-submode-label">px</span>
+                        </span>
+                        <span class="semantic-submode-group" id="gen_attr_dag_linear_arc_interval_group" hidden>
+                            <label class="semantic-submode-label" for="gen_attr_dag_linear_arc_interval" data-i18n>Token distance</label>
+                            <input type="number" id="gen_attr_dag_linear_arc_interval" class="gen-attr-dag-measure-width-input"
+                                value="0" min="0" max="400" step="1"
+                                title="Horizontal gap (px) between the outer left/right edges of adjacent token nodes in linear-arc / linear-arc-step-down layout only. When idle, the DAG refits; during generation or DAG playback, the value is stored and applied on the next sync."
+                                data-i18n="title">
+                            <span class="semantic-submode-label">px</span>
+                        </span>
+                    </div>
+                    <div class="gen-attr-dag-measure-width-row gen-attr-dag-surprisal-toggles-row semantic-submode-row">
+                        <span class="semantic-submode-group">
+                            <label class="semantic-submode-label">
+                                <input type="checkbox" id="gen_attr_dag_node_ci_visual_scale"
+                                    title="When checked, generated nodes are visually enlarged based on their conditional information (surprisal). Takes effect on next generation."
+                                    data-i18n="title">
+                                Enlarge high-surprisal nodes
+                            </label>
+                        </span>
+                        <span class="semantic-submode-group">
+                            <label class="semantic-submode-label">
+                                <input type="checkbox" id="gen_attr_dag_decay_attribution_high_surprisal"
+                                    title="When checked, recursive trace decays propagated attribution at high-surprisal generated tokens (MI discount), so surprising or teacher-forced tokens can act as sources. Unchecked: all generated tokens are transparent conduits; trace continues to prompt only."
+                                    data-i18n="title">
+                                Decay attribution to high-surprisal targets
+                            </label>
+                        </span>
+                    </div>
+                    <div class="gen-attr-dag-measure-width-row semantic-submode-row">
+                        <span class="semantic-submode-group semantic-submode-group--emphasis">
+                            <label class="semantic-submode-label">
+                                <input type="checkbox" id="gen_attr_dag_recursive_attribution"
+                                    title="Unchecked: direct attribution — immediate predecessors only (default). Checked: Causal Flow Mode (↯) — trace from the focused token back to information sources. Sources: prompt; surprising or teacher-forced generated tokens (MI decay stops the chain). Conduits: high-confidence middle tokens—attribution passes through. Blue edges: propagated share; node ring: attribution stay (strong where explanation lands). Use with Decay attribution to high-surprisal targets. On the DAG, ↯ plays the focus propagation chain; ▶ replays generation steps when no token is focused."
+                                    data-i18n="title">
+                                <span class="gen-attr-causal-flow-mode-label">
+                                    <span class="gen-attr-causal-flow-mode-icon" aria-hidden="true">↯</span>
+                                    <span data-i18n>Causal Flow Mode</span>
+                                </span>
+                            </label>
+                        </span>
+                        <span class="semantic-submode-group" id="gen_attr_dag_recursive_edge_animation_direction_group" hidden>
+                            <label class="semantic-submode-label" for="gen_attr_dag_recursive_edge_animation_direction">Direction</label>
+                            <select id="gen_attr_dag_recursive_edge_animation_direction" class="semantic-submode-select"
+                                title="Direction for focus-chain batch animation when you press propagation play (↯) on the DAG with a focused token in Causal Flow Mode."
+                                data-i18n="title">
+                                <option value="forward">forward</option>
+                                <option value="backward">backward</option>
+                            </select>
+                        </span>
+                        <span class="semantic-submode-group" id="gen_attr_dag_dim_inactive_tokens_group" hidden>
+                            <label class="semantic-submode-label">
+                                <input type="checkbox" id="gen_attr_dag_dim_inactive_tokens"
+                                    title="When checked in Causal Flow Mode, generated tokens whose Attribution share (Total) from the current focus is below the threshold are further dimmed to 0.1 (on top of the usual focus dimming); their edges and propagation animation are hidden. Prompt tokens are not affected."
+                                    data-i18n="title">
+                                <span data-i18n>Dim inactive tokens: share &lt;</span>
+                            </label>
+                            <span class="gen-attr-dag-replay-value-wrap">
+                                <input type="number" id="gen_attr_dag_dim_inactive_tokens_threshold" class="gen-attr-dag-measure-width-input"
+                                    value="1" min="0" max="100" step="1"
+                                    title="Attribution share (Total) threshold (%): generated tokens with share strictly below this percentage are inactive."
+                                    data-i18n="title">
+                                <span class="semantic-submode-label">%</span>
+                            </span>
+                            <label class="semantic-submode-label" id="gen_attr_dag_dim_inactive_not_in_animation_wrap" hidden>
+                                <input type="checkbox" id="gen_attr_dag_dim_inactive_not_in_animation"
+                                    title="When checked, inactive-token dimming is suspended while propagation animation is playing or paused; it resumes when playback ends or stops."
+                                    data-i18n="title">
+                                <span data-i18n>Not in animation</span>
+                            </label>
+                        </span>
+                        <span class="semantic-submode-group" id="gen_attr_dag_show_downstream_influence_group">
+                            <label class="semantic-submode-label">
+                                <input type="checkbox" id="gen_attr_dag_show_downstream_influence"
+                                    title="When checked, direct attribution focus also shows outgoing edges from the selected or hovered token as downstream influence. Causal Flow Mode keeps showing upstream attribution chains only."
+                                    data-i18n="title">
+                                Show downstream influence
+                            </label>
+                        </span>
+                    </div>
+                    <div class="gen-attr-dag-measure-width-row semantic-submode-row">
+                        <span class="semantic-submode-group semantic-submode-group--emphasis">
+                            <label class="semantic-submode-label" for="gen_attr_dag_edge_top_p_coverage" data-i18n>Attribution top-p coverage</label>
+                            <input type="number" id="gen_attr_dag_edge_top_p_coverage" class="gen-attr-dag-measure-width-input"
+                                value="0.7" min="0.05" max="1" step="0.05"
+                                title="Coverage is the cumulative mass share within each generation step's Top-N candidate pool (after sorting candidates into the pool and normalizing mass inside that pool). Higher values keep more incoming edges. The denominator is this pool only, not every token-attribution entry returned for the step."
+                                data-i18n="title">
+                        </span>
+                        <span class="semantic-submode-group">
+                            <label class="semantic-submode-label">
+                                <input type="checkbox" id="gen_attr_dag_hide_inactive_edges"
+                                    title="When checked, gray DAG edges not adjacent to the hovered or selected node are hidden."
+                                    data-i18n="title">
+                                Hide inactive edges
+                            </label>
+                        </span>
+                    </div>
+                    <div class="attribution-exclude-prompt-patterns-row">
+                        <div class="semantic-submode-row attribution-delete-prompt-patterns-header">
+                            <span class="semantic-submode-group">
+                                <label class="attribution-use-mapping-label"
+                                    title="When enabled, each line below is a regex with the global flag, matched only within input areas (excluding generated continuation). Matched prompt tokens are physically removed from the DAG — they neither appear nor occupy layout space (stricter than Exclude + Hide)."
+                                    data-i18n="title">
+                                    <input type="checkbox" id="gen_attr_delete_prompt_patterns_enable">
+                                    <span></span>
+                                </label>
+                            </span>
+                            <span class="semantic-submode-group">
+                                <label class="semantic-submode-label" for="gen_attr_delete_prompt_patterns" data-i18n>Delete prompt patterns</label>
+                            </span>
+                        </div>
+                        <textarea id="gen_attr_delete_prompt_patterns" class="attribution-exclude-prompt-patterns-input" rows="1"
+                            placeholder="One regex per line — matched prompt tokens are removed from layout"
+                            spellcheck="false"
+                            autocomplete="off"
+                            title="One regex per line (global flag), matched only within input areas (excluding generated continuation); matched tokens are deleted from the DAG and do not occupy layout space."
+                            data-i18n="placeholder,title"></textarea>
+                    </div>
+                    <div class="attribution-exclude-prompt-patterns-row">
+                        <div class="semantic-submode-row attribution-exclude-prompt-patterns-header">
+                            <span class="semantic-submode-group">
+                                <label class="attribution-use-mapping-label"
+                                    title="When enabled, each line below is a regex with the global flag, matched only within input areas (excluding generated continuation). If a token offset lies fully inside a match, its score is treated as 0."
+                                    data-i18n="title">
+                                    <input type="checkbox" id="gen_attr_exclude_prompt_patterns_enable" checked>
+                                    <span></span>
+                                </label>
+                            </span>
+                            <span class="semantic-submode-group">
+                                <label class="semantic-submode-label" for="gen_attr_exclude_prompt_patterns" data-i18n>Exclude prompt patterns</label>
+                            </span>
+                        </div>
+                        <textarea id="gen_attr_exclude_prompt_patterns" class="attribution-exclude-prompt-patterns-input" rows="1"
+                            placeholder="One regex per line (input areas only)"
+                            spellcheck="false"
+                            autocomplete="off"
+                            title="One regex per line (global flag), matched only within input areas (excluding generated continuation); if a token offset lies fully inside a match, its score is treated as 0."
+                            data-i18n="placeholder,title"></textarea>
+                    </div>
+
+                    <div class="attribution-exclude-prompt-patterns-row">
+                        <div class="semantic-submode-row attribution-exclude-generated-patterns-header">
+                            <span class="semantic-submode-group">
+                                <label class="attribution-use-mapping-label"
+                                    title="When enabled, each line below is a regex with the global flag, matched only within the model-generated continuation (excluding the initial static prompt). If a token offset lies fully inside a match, its score is treated as 0."
+                                    data-i18n="title">
+                                    <input type="checkbox" id="gen_attr_exclude_generated_patterns_enable" checked>
+                                    <span></span>
+                                </label>
+                            </span>
+                            <span class="semantic-submode-group">
+                                <label class="semantic-submode-label" for="gen_attr_exclude_generated_patterns" data-i18n>Exclude generated patterns</label>
+                            </span>
+                        </div>
+                        <textarea id="gen_attr_exclude_generated_patterns" class="attribution-exclude-prompt-patterns-input" rows="1"
+                            placeholder="One regex per line (generated continuation only)"
+                            spellcheck="false"
+                            autocomplete="off"
+                            title="One regex per line (global flag), matched only within the generated suffix; if a token offset lies fully inside a match, its score is treated as 0."
+                            data-i18n="placeholder,title"></textarea>
+                    </div>
+
+                    <div class="gen-attr-dag-measure-width-row semantic-submode-row">
+                        <span class="semantic-submode-group">
+                            <label class="semantic-submode-label">
+                                <input type="checkbox" id="gen_attr_dag_hide_excluded_tokens"
+                                    title="When checked, tokens at 0.1 opacity (exclude matches and inactive tokens when Dim inactive tokens is on) are hidden from the DAG (linear-arc: also excluded from layout)."
+                                    data-i18n="title">
+                                <span data-i18n>Hide exclude/inactive tokens</span>
+                            </label>
+                        </span>
+                    </div>
+                    <div class="gen-attr-dag-measure-width-row semantic-submode-row gen-attr-dag-show-topk-on-selected-row">
+                        <span class="semantic-submode-group">
+                            <label class="semantic-submode-label">
+                                <input type="checkbox" id="gen_attr_dag_show_topk_on_selected"
+                                    title="When checked, selecting or hovering a token node shows token information in the results area."
+                                    data-i18n="title">
+                                <span data-i18n>Show token tooltip</span>
+                            </label>
+                        </span>
+                    </div>
+                    <div class="gen-attr-dag-measure-width-row semantic-submode-row">
+                        <span class="semantic-submode-group gen-attr-dag-replay-speed-row semantic-submode-group--emphasis">
+                            <label class="semantic-submode-label" for="gen_attr_dag_replay_mode" data-i18n>Play speed</label>
+                            <select id="gen_attr_dag_replay_mode"
+                                class="semantic-submode-select gen-attr-dag-replay-mode-select"
+                                title="Total duration or per-step delay. DAG step replay (▶) uses equal steps or a fixed step interval; propagation chain animation (↯) scales each step by attribution weight."
+                                data-i18n="title">
+                                <option value="total" data-i18n>total time</option>
+                                <option value="step" data-i18n>step time</option>
+                            </select>
+                            <span id="gen_attr_dag_replay_total_wrap" class="gen-attr-dag-replay-value-wrap">
+                                <input type="number" id="gen_attr_dag_playback_total_s" class="gen-attr-dag-measure-width-input"
+                                    value="7" min="1" max="3600" step="1"
+                                    title="Total seconds. With no focused token, DAG step replay (▶) divides evenly; in Causal Flow Mode with a focused token, propagation play (↯) runs focus-chain animation split by layer weight. Saved locally; applied when you press play."
+                                    data-i18n="title">
+                                <span class="semantic-submode-label">s</span>
+                            </span>
+                            <span id="gen_attr_dag_replay_step_wrap" class="gen-attr-dag-replay-value-wrap" hidden>
+                                <input type="number" id="gen_attr_dag_playback_step_ms" class="gen-attr-dag-measure-width-input"
+                                    value="200" min="0" max="10000" step="10"
+                                    title="Milliseconds per step. DAG step replay (▶) uses this fixed interval; with a focused token in Causal Flow Mode, propagation play (↯) scales each batch by layer weight. Saved locally; applied when you press play."
+                                    data-i18n="title">
+                                <span class="semantic-submode-label">ms</span>
+                            </span>
+                        </span>
+                    </div>
+                    <div class="gen-attr-dag-measure-width-row semantic-submode-row gen-attr-dag-replay-auto-zoom-row">
+                        <span class="semantic-submode-group">
+                            <label class="semantic-submode-label">
+                                <input type="checkbox" id="gen_attr_dag_replay_auto_zoom"
+                                    title="When checked, step replay (▶) fits the viewport after each step (stops if you pan or zoom). Saved locally."
+                                    data-i18n="title">
+                                <span data-i18n>Auto zoom</span>
+                            </label>
+                        </span>
+                    </div>
+                </section>
+            </div>
+        </section>
+
+        <div class="resizer" id="resizer"></div>
+
+        <section class="right_panel">
+            <div id="results" class="attribution-inspector-surface gen-attr-results-surface LMF"></div>
+        </section>
+    </main>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="vendor.js"></script>
+    <script src="causal_flow.js"></script>
+
+</body>
+
+</html>

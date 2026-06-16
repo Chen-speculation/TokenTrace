@@ -1,0 +1,41 @@
+{
+  "navPageKeys": ["causalFlow", "analysis", "attribution", "logitLens", "branchTree", "chat"],
+  "pages": {
+    "home": {
+      "title": "INNERSCOPE",
+      "subtitle": "A toolbox for looking inside language models",
+      "heartline": "",
+      "formula": ""
+    },
+    "analysis": {
+      "title": "Info Highlight",
+      "subtitle": "Paste text to see which words surprise the model most",
+      "href": "analysis.html"
+    },
+    "chat": {
+      "title": "Raw Chat",
+      "subtitle": "Chat and inspect every token the model produces",
+      "href": "chat.html"
+    },
+    "attribution": {
+      "title": "Attribution",
+      "subtitle": "See which context words drive a specific prediction",
+      "href": "attribution.html"
+    },
+    "causalFlow": {
+      "title": "Causal Flow",
+      "subtitle": "Trace how information travels through the model",
+      "href": "causal_flow.html"
+    },
+    "logitLens": {
+      "title": "Logit Lens",
+      "subtitle": "Watch how the model's confidence builds layer by layer",
+      "href": "logit_lens.html"
+    },
+    "branchTree": {
+      "title": "Branch Tree",
+      "subtitle": "Type a prefix and explore what the model might say next",
+      "href": "branch_tree.html"
+    }
+  }
+}

@@ -1,0 +1,568 @@
+@use 'shared-chrome';
+@use 'breakpoints' as *;
+
+// ===== 导航首页：Swiss Style + 科学仪器界面 =====
+
+// 字体层级
+$font-mono: var(--font-icon), 'JetBrains Mono', monospace;
+
+// 网格参数
+$grid-gutter: 1.5rem;
+$grid-margin: 2rem;
+$grid-max-width: 1200px;
+
+// 字号系统（底线 12px）
+$text-10: 0.625rem;   // 10px - 仅仪器编号/标签
+$text-11: 0.6875rem;  // 11px
+$text-12: 0.75rem;    // 12px - 底线
+$text-13: 0.8125rem;  // 13px
+$text-14: 0.875rem;   // 14px
+$text-16: 1rem;       // 16px
+$text-18: 1.125rem;   // 18px
+$text-24: 1.5rem;     // 24px
+$text-32: 2rem;       // 32px
+
+// ===== 页面根 =====
+body.nav-landing-page {
+  --nav-landing-title-size: #{$text-32};
+  --nav-landing-title-weight: 600;
+  --nav-landing-subtitle-size: #{$text-16};
+  --nav-landing-subtitle-weight: 400;
+  --nav-landing-line-height: 1.15;
+  --nav-landing-subtitle-line-height: 1.6;
+  --nav-landing-card-bg: transparent;
+  --nav-landing-card-bg-hover: var(--bg-hover);
+
+  position: relative;
+  min-height: 100vh;
+  height: auto;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-family-ui);
+  font-size: var(--font-size-base);
+  color: var(--text-color);
+  background: var(--app-bg);
+}
+
+html[data-theme='dark'] body.nav-landing-page {
+  color: var(--text-color);
+  background: var(--app-bg);
+  --nav-landing-card-bg: transparent;
+  --nav-landing-card-bg-hover: var(--bg-hover);
+}
+
+.nav-landing-settings {
+  position: absolute;
+  top: max(12px, env(safe-area-inset-top));
+  right: max(1.25rem, env(safe-area-inset-right));
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+// ===== Main 容器：12 列网格 =====
+.nav-landing-main {
+  width: 100%;
+  max-width: $grid-max-width;
+  box-sizing: border-box;
+  padding: 2rem $grid-margin;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: $grid-gutter;
+}
+
+@media (max-width: $breakpoint-mobile) {
+  .nav-landing-main {
+    padding: 1.5rem 1rem;
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+// ===== Hero Section =====
+.nav-landing-hero {
+  grid-column: span 12;
+  margin-bottom: 3rem;
+}
+
+@media (max-width: $breakpoint-mobile) {
+  .nav-landing-hero {
+    grid-column: span 4;
+  }
+}
+
+.nav-landing-hero-grid {
+  display: grid;
+  grid-template-columns: 8fr 4fr;
+  gap: $grid-gutter;
+  align-items: center;
+}
+
+@media (max-width: $breakpoint-mobile) {
+  .nav-landing-hero-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.nav-landing-hero-text {
+  text-align: left;
+}
+
+.nav-landing-eyebrow {
+  font-family: $font-mono;
+  font-size: $text-11;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent-color);
+  margin-bottom: 1.25rem;
+}
+
+.nav-landing-title {
+  font-size: var(--nav-landing-title-size);
+  font-weight: var(--nav-landing-title-weight);
+  line-height: var(--nav-landing-line-height);
+  letter-spacing: -0.02em;
+  margin: 0 0 1.25rem 0;
+  max-width: 680px;
+}
+
+.nav-landing-subtitle {
+  margin: 0;
+  max-width: 540px;
+  font-size: var(--nav-landing-subtitle-size);
+  font-weight: var(--nav-landing-subtitle-weight);
+  line-height: var(--nav-landing-subtitle-line-height);
+  color: var(--text-muted);
+}
+
+// Hero Lens SVG
+.nav-landing-hero-lens {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lens-aperture {
+  width: 120px;
+  height: 120px;
+  animation: aperture-rotate 20s linear infinite;
+}
+
+@keyframes aperture-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.lens-aperture-blade {
+  fill: none;
+  stroke: var(--border-strong);
+  stroke-width: 1;
+}
+
+.lens-aperture-ring {
+  fill: none;
+  stroke: var(--accent-color);
+  stroke-width: 1.5;
+  opacity: 0.6;
+}
+
+// ===== Module Grid：Swiss Style 细线网格 =====
+.nav-landing-module-grid {
+  grid-column: span 12;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--border-color);
+  border-left: 1px solid var(--border-color);
+}
+
+@media (max-width: $breakpoint-mobile) {
+  .nav-landing-module-grid {
+    grid-column: span 4;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-landing-module-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.nav-landing-module-cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.75rem 1.5rem;
+  border-right: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  text-decoration: none;
+  color: inherit;
+  text-align: left;
+  background: var(--nav-landing-card-bg);
+  transition: background 0.15s ease;
+  cursor: pointer;
+  box-sizing: border-box;
+
+  &:hover {
+    background: var(--nav-landing-card-bg-hover);
+  }
+}
+
+.nav-landing-module-num {
+  font-family: $font-mono;
+  font-size: $text-11;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+
+.nav-landing-module-name {
+  font-size: $text-16;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-color);
+}
+
+.nav-landing-module-desc {
+  font-size: $text-12;
+  line-height: 1.5;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+.nav-landing-module-tag {
+  display: inline-block;
+  align-self: flex-start;
+  margin-top: 0.75rem;
+  font-family: $font-mono;
+  font-size: $text-10;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.4rem;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  border-radius: 2px;
+}
+
+// ===== 注入的预览图/轮播（构建脚本注入） =====
+.nav-landing-module-cell {
+  // 隐藏注入的重复文本（已用 module-name/desc 展示）
+  .nav-landing-card-text,
+  .nav-landing-card-link {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    text-decoration: none;
+    color: inherit;
+    opacity: 0; // 隐藏但保留可点击和 SEO
+
+    .nav-landing-card-title,
+    .nav-landing-card-subtitle {
+      display: none;
+    }
+  }
+
+  // Badge 定位
+  .nav-landing-card-badge {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    z-index: 2;
+  }
+
+  // 预览图容器
+  .nav-landing-card-shot {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: 180px;
+    margin-top: auto;
+    border-top: 1px solid var(--border-color);
+    background: var(--bg-hover);
+    background-size: cover;
+    background-position: center;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  // 轮播专用
+  .nav-landing-card-shot--carousel {
+    position: relative;
+    padding: 0;
+
+    .nav-landing-card-carousel-viewport {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    .nav-landing-card-slide {
+      flex: 0 0 100%;
+      height: 100%;
+      scroll-snap-align: start;
+
+      video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+    }
+
+    // 轮播导航
+    .nav-landing-card-carousel-arrow {
+      display: none;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+      width: 28px;
+      height: 28px;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.28);
+      color: rgba(255, 255, 255, 0.92);
+      font-size: 1.25rem;
+      cursor: pointer;
+      opacity: 0.72;
+      transition: opacity 0.15s ease;
+
+      &:hover { opacity: 1; }
+      &--prev { left: 8px; }
+      &--next { right: 8px; }
+    }
+
+    .nav-landing-card-carousel-dots {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+      z-index: 2;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.28);
+
+      button {
+        appearance: none;
+        width: 5px;
+        height: 5px;
+        padding: 0;
+        border: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.42);
+        cursor: pointer;
+        transition: background 0.15s ease;
+
+        &.is-active {
+          background: #fff;
+        }
+      }
+    }
+  }
+
+  // 静态预览图背景
+  &[data-nav-page='analysis'] .nav-landing-card-shot {
+    background-image: url('../../assets/images/highlight.png');
+  }
+
+  &[data-nav-page='chat'] .nav-landing-card-shot {
+    background-image: url('../../assets/images/chat.png');
+  }
+
+  &[data-nav-page='attribution'] .nav-landing-card-shot {
+    background-image: url('../../assets/images/attribute.png');
+  }
+}
+
+@media (min-width: $breakpoint-mobile + 1) {
+  .nav-landing-module-cell .nav-landing-card-shot--carousel .nav-landing-card-carousel-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+// ===== Footer =====
+.nav-landing-footer {
+  grid-column: span 12;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-color);
+  text-align: center;
+}
+
+@media (max-width: $breakpoint-mobile) {
+  .nav-landing-footer {
+    grid-column: span 4;
+  }
+}
+
+.nav-landing-heartline {
+  margin: 0 0 0.35rem;
+  font-size: $text-14;
+  line-height: 1.45;
+  color: var(--text-color);
+  opacity: 0.88;
+  letter-spacing: 0.02em;
+}
+
+.nav-landing-hint {
+  margin: 0;
+  font-size: $text-13;
+  font-style: italic;
+  line-height: 1.45;
+  color: var(--text-muted);
+  opacity: 0.72;
+  letter-spacing: 0.02em;
+}
+
+// ===== 旧的卡片样式（保留以兼容 JS 但不使用）=====
+.nav-landing-grid {
+  display: none;
+}
+
+.nav-landing-card {
+  display: none;
+}
+
+// ===== 卡片内动效 Demo =====
+.nav-landing-module-cell {
+  --demo-muted: var(--border-strong);
+  --demo-border: var(--border-color);
+  --demo-node-bg: var(--bg-color);
+  --demo-accent: var(--accent-color);
+  --demo-accent-bg: color-mix(in srgb, var(--accent-color) 12%, transparent);
+}
+
+.card-demo {
+  margin-top: auto;
+  padding-top: 1rem;
+  pointer-events: none;
+  user-select: none;
+}
+
+// ---- shared node text ----
+.demo-node-text {
+  font-size: 9px;
+  fill: var(--text-muted);
+  font-family: var(--font-family-ui);
+  &--accent { fill: var(--accent-color); font-weight: 600; }
+}
+
+// ---- Info Highlight ----
+.card-demo--highlight {
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+.demo-tok {
+  border-radius: 3px;
+  padding: 0 1px;
+  // 脉冲动画：透明 → 对应 alpha → 透明
+  animation: tok-pulse 3s ease-in-out infinite;
+  animation-delay: calc(var(--a, 0) * -3s); // 用 alpha 值错开相位，让各词不同步
+}
+.demo-tok--hi { color: var(--text-color); }
+@keyframes tok-pulse {
+  0%, 100% { background: rgba(255, 71, 64, 0); }
+  50%       { background: rgba(255, 71, 64, var(--a, 0.1)); }
+}
+
+// ---- Attribution ----
+.card-demo--attribution { font-size: 11px; }
+.demo-attr-ctx { margin-bottom: 4px; }
+.demo-attr-tok {
+  display: inline-block;
+  padding: 1px 3px;
+  border-radius: 3px;
+  margin-right: 2px;
+  color: var(--text-color);
+  animation: attr-pulse 2.5s ease-in-out infinite;
+  animation-delay: calc(var(--s, 0) * -2.5s);
+}
+.demo-attr-target { color: var(--accent-color); font-weight: 600; font-size: 11px; }
+@keyframes attr-pulse {
+  0%, 100% { background: rgba(255, 71, 64, 0); }
+  50%       { background: rgba(255, 71, 64, calc(var(--s, 0) * 0.75)); }
+}
+
+// ---- DAG ----
+.card-demo--dag svg { width: 100%; height: auto; }
+.demo-dag-edge {
+  stroke-dasharray: 80;
+  animation: dash-loop 2.4s ease-in-out infinite;
+}
+@keyframes dash-loop {
+  0%   { stroke-dashoffset: 80; opacity: 0.3; }
+  40%  { stroke-dashoffset: 0;  opacity: 1; }
+  80%  { stroke-dashoffset: 0;  opacity: 1; }
+  100% { stroke-dashoffset: -80; opacity: 0.3; }
+}
+
+// ---- Logit Lens ----
+.card-demo--logit svg { width: 100%; height: auto; }
+.demo-logit-line {
+  stroke-dasharray: 400;
+  animation: logit-draw 3s ease-in-out infinite;
+}
+@keyframes logit-draw {
+  0%   { stroke-dashoffset: 400; }
+  60%  { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: 0; }
+}
+.demo-logit-eureka {
+  animation: eureka-blink 3s ease-in-out infinite;
+}
+@keyframes eureka-blink {
+  0%, 55% { opacity: 0; transform: scale(0.5); }
+  65%     { opacity: 1; transform: scale(1.2); }
+  75%, 100% { opacity: 1; transform: scale(1); }
+}
+.demo-logit-label {
+  animation: eureka-blink 3s ease-in-out infinite;
+}
+
+// ---- Branch Tree: 子节点依次淡入 ----
+.card-demo--tree svg { width: 100%; height: auto; }
+.demo-tree-branch {
+  animation: branch-appear 3s ease-in-out infinite;
+  &:nth-child(1) { animation-delay: 0.4s; }
+  &:nth-child(2) { animation-delay: 0.7s; }
+  &:nth-child(3) { animation-delay: 1.0s; }
+}
+@keyframes branch-appear {
+  0%, 30%  { opacity: 0; }
+  50%, 80% { opacity: 1; }
+  100%     { opacity: 0; }
+}
+
+// ---- Chat: token 依次出现后整体消退 ----
+.card-demo--chat { font-size: 10px; display: flex; flex-direction: column; gap: 6px; }
+.demo-chat-row { padding: 3px 6px; border-radius: 4px; line-height: 1.4; }
+.demo-chat-row--prompt { background: var(--bg-hover); color: var(--text-muted); }
+.demo-chat-row--reply { background: color-mix(in srgb, var(--accent-color) 8%, transparent); color: var(--text-color); }
+.demo-chat-tok {
+  display: inline-block;
+  padding: 0 1px;
+  border-radius: 2px;
+  animation: chat-tok-loop 3.5s ease infinite;
+  animation-delay: var(--d, 0s);
+}
+.demo-chat-tok--hi { color: var(--accent-color); font-weight: 700; }
+@keyframes chat-tok-loop {
+  0%        { opacity: 0; transform: translateY(3px); }
+  15%, 75%  { opacity: 1; transform: translateY(0); }
+  90%, 100% { opacity: 0; transform: translateY(0); }
+}
