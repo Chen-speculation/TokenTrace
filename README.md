@@ -4,7 +4,7 @@ emoji: 🔬
 colorFrom: blue
 colorTo: purple
 sdk: docker
-short_description: Trace how LLMs think — token attribution, logit lens, semantic analysis & more
+short_description: Trace how every token shapes an LLM's predictions
 tags:
   - nlp
   - text-analysis
