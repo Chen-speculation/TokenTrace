@@ -40,6 +40,7 @@ from backend.api.analyze_semantic import analyze_semantic  # noqa: F401
 from backend.api.prediction_attribute import prediction_attribute  # noqa: F401
 from backend.api.ablation_attribute import ablation_attribute  # noqa: F401
 from backend.api.logit_lens import logit_lens  # noqa: F401
+from backend.api.activation_explain import activation_explain  # noqa: F401
 from backend.api.branch_next import branch_next  # noqa: F401
 from backend.api.tokenize import tokenize  # noqa: F401
 from backend.api.model_switch import (  # noqa: F401

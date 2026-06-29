@@ -512,5 +512,10 @@ export const translations: Translations = {
         'which input tokens drove this prediction? Gradient scores each context token by how much changing it would shift the output probability.': '哪些输入词推动了这个预测？梯度法通过计算每个 token 对输出概率的扰动敏感度，量化其贡献。',
         'applies the final output layer to each intermediate layer, revealing how the model\'s prediction takes shape across depth — early layers guess, later layers converge.': '将最终输出层应用于每个中间层，揭示预测如何随深度逐步成型——浅层在猜测，深层在收敛。',
         'shows the model\'s top-k next-token candidates at each step as an interactive tree — revealing how probability mass spreads across possible continuations.': '将每一步的 top-k 候选词展开为可交互树，揭示概率质量如何在可能的续写路径间分布。',
+
+        // ---- Activation Explainer ----
+        'Activation Explainer': '激活解释',
+        'Activation explain failed': '激活解释失败',
+        'Loading activation explanation…': '正在推理激活解释…',
     }
 };

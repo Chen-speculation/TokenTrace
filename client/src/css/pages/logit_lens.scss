@@ -84,6 +84,54 @@
   margin-bottom: 4px;
 }
 
+// ---- Activation Explainer ----
+.ae-loading {
+  font-size: 9pt;
+  color: var(--text-muted);
+  padding: 12px 0;
+  text-align: center;
+}
+
+.ae-result {
+  margin-top: 8px;
+}
+
+.ae-field {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.ae-label {
+  font-size: 10pt;
+  font-weight: 600;
+  color: var(--text-secondary);
+  min-width: 48px;
+  flex-shrink: 0;
+}
+
+.ae-value {
+  font-size: 10pt;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+.ae-cosine {
+  font-weight: 700;
+  font-size: 11pt;
+  &.cosine-excellent { color: #16a34a; }
+  &.cosine-good      { color: #2563eb; }
+  &.cosine-fair      { color: #d97706; }
+  &.cosine-low       { color: #dc2626; }
+}
+
+.ae-error {
+  font-size: 9pt;
+  color: #dc2626;
+  padding: 8px 0;
+}
+
 // ---- 层卡片 ----
 .ll-layer-card {
   margin-top: 12px;

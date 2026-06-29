@@ -102,6 +102,16 @@ export type BranchNextResult = {
     message?: string;
 };
 
+export type ActivationExplainResult = {
+    success: boolean;
+    concept?: string;
+    explanation?: string;
+    roundtrip_cosine?: number;
+    vector_dim?: number;
+    note?: string;
+    message?: string;
+};
+
 export class TextAnalysisAPI {
     private adminToken: string | null = null;
 
@@ -502,6 +512,51 @@ export class TextAnalysisAPI {
             throw new Error(data.message || 'Branch next failed');
         }
         return data as BranchNextResult;
+    }
+
+    /**
+     * Tokenize：将文本分词为 token spans。
+     */
+    public async tokenize(
+        context: string,
+        model: string,
+        signal?: AbortSignal
+    ): Promise<{ success: boolean; spans: Array<{ offset: [number, number]; raw: string; token_id?: number }> }> {
+        const res = await fetch(this.baseURL + '/api/tokenize', {
+            method: 'POST',
+            headers: this.getHeaders(),
+            body: JSON.stringify({ context, model }),
+            signal
+        });
+        const data = await res.json();
+        if (data && data.success === false) {
+            throw new Error(data.message || 'Tokenize failed');
+        }
+        return data;
+    }
+
+    /**
+     * Activation Explainer (Tiny-NLA)：解释激活向量的概念语义。
+     */
+    public async explainActivation(
+        model: string,
+        sourcePage: string,
+        text: string,
+        tokenIndex: number,
+        signal?: AbortSignal
+    ): Promise<ActivationExplainResult> {
+        const bodyObj: Record<string, unknown> = { model, source_page: sourcePage, text, token_index: tokenIndex };
+        const res = await fetch(this.baseURL + '/api/activation-explain', {
+            method: 'POST',
+            headers: this.getHeaders(),
+            body: JSON.stringify(bodyObj),
+            signal
+        });
+        const data = await res.json();
+        if (data && data.success === false) {
+            throw new Error(data.message || 'Activation explain failed');
+        }
+        return data as ActivationExplainResult;
     }
 
     /**

@@ -1,6 +1,7 @@
 transformers>=4.51.0,<5.0.0  # 5.x 需 accelerate库，HF Spaces 上易出问题
 torch>=2.1.0,<2.5.0
 numpy>=1.24.0
+peft>=0.14.0  # LoRA 模型加载（Tiny-NLA Phase 1b）
 connexion[flask,swagger-ui,uvicorn]>=3.0.0
 flask>=3.0.0
 PyYAML>=6.0

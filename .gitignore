@@ -8,6 +8,7 @@ __pycache__/
 *.py[cod]
 .venv/
 venv/
+venv*/
 env/
 node_modules/
 client/src/node_modules/
@@ -33,6 +34,9 @@ notes/*
 user_dialog_history/*
 .cache_huggingface/
 .env
+
+# --- 实验工件（模型权重、数据、检查点） ---
+artifacts/
 
 # --- 系统与 IDE ---
 .DS_Store

@@ -84,6 +84,16 @@
                     </div>
                 </section>
             </div>
+
+            <div class="logit-lens-panel" id="ae_panel" style="display:none;">
+                <div class="attribution-panel-label">Activation Explainer / 激活解释</div>
+                <div id="ae_loading" class="ae-loading" style="display:none">🧠 正在推理... 激活解释需要较长时间（约 5-15 秒）</div>
+                <div id="ae_result" class="ae-result" style="display:none">
+                    <div class="ae-field"><span class="ae-label">解释</span><span id="ae_explanation" class="ae-value"></span></div>
+                    <div class="ae-field"><span class="ae-label">可信度</span><span id="ae_cosine" class="ae-cosine"></span><span>&nbsp;(roundtrip cosine)</span></div>
+                </div>
+                <div id="ae_error" class="ae-error" style="display:none"></div>
+            </div>
         </section>
 
         <div class="resizer" id="resizer"></div>

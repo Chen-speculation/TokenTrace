@@ -763,6 +763,67 @@ paths:
         503:
           description: 服务繁忙
 
+  /activation-explain:
+    post:
+      tags:
+        - all
+      summary: activation explain (Tiny-NLA)
+      operationId: server.activation_explain
+      parameters:
+        - in: body
+          name: activation_explain_request
+          schema:
+            type: object
+            required:
+              - model
+              - source_page
+            properties:
+              model:
+                type: string
+                enum: [base, instruct]
+              source_page:
+                type: string
+              text:
+                type: string
+                description: 输入上下文文本（与 token_index 配套）
+              token_index:
+                type: integer
+                description: 目标 token 索引（text 模式必填）
+              vector:
+                type: array
+                items:
+                  type: number
+                description: 1024 维激活向量（与 text 互斥）
+      responses:
+        200:
+          description: 激活解释结果
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              concept:
+                type: string
+                description: 激活概念标签
+              explanation:
+                type: string
+                description: 自然语言解释
+              roundtrip_cosine:
+                type: number
+                description: roundtrip 可信度（0-1）
+              vector_dim:
+                type: integer
+                description: 向量维度
+              note:
+                type: string
+                description: 备注或状态说明
+        400:
+          description: 缺少必要字段、model 非法、text/vector 均未提供
+        500:
+          description: 推理失败
+        503:
+          description: 服务繁忙
+
   /branch-next:
     post:
       tags:

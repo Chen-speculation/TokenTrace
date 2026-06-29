@@ -1,0 +1,48 @@
+kind: tiny_nla_model
+base_model: Qwen/Qwen3-0.6B-Base
+av_init_model: Qwen/Qwen3-0.6B
+layer_index: 19
+num_hidden_layers: 28
+d_model: 1024
+activation_source: residual_stream
+token_position_policy: selected_token
+extraction:
+  injection_scale: 126.223
+  mse_normalization: l2_direction
+tokens:
+  injection_char: ㈎
+  injection_token_id: 149705
+prompt_templates:
+  av: '<concept>{injection_char}</concept>
+
+    <explanation>'
+  ar: <explanation>{explanation_text}</explanation>
+training:
+  device: mps
+  dtype: torch.float32
+  dataset_size: 284
+  teacher: local_qwen_instruct
+  created_at: '2026-06-16T21:43:52'
+av_results:
+  best_val_loss: 0.6400
+  lora_r: 8
+  lora_alpha: 16
+  checkpoint: artifacts/tiny_nla/checkpoints/av
+ar_results:
+  best_val_cosine: 0.6631
+  best_val_loss: 0.000658
+  mean_baseline_cosine: 0.5962
+  shuffled_baseline_cosine: 0.5252
+  improvement_over_mean: 0.0669
+  checkpoint: artifacts/tiny_nla/checkpoints/ar/best_ar_head.pt
+activation_stats:
+  mean: 125.85986328125
+  p50: 126.22295379638672
+  p90: 127.06012725830078
+  max: 129.3959503173828
+  min: 120.7603988647461
+  std: 3.65517520904541
+smoke_test:
+  forward_ok: true
+  gen_ok: true
+  cosine_post_injection: 0.5979639887809753
