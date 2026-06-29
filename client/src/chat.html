@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 
 <head>
     <meta charset="UTF-8">
@@ -13,19 +13,7 @@
     <main class="main_frame">
         <section class="left_panel">
             <div class="floating_content">
-                <header class="app-page-toolbar app-page-toolbar--bleed">
-                    <h1 class="page-toolbar-title"><span class="title-main-line"><span data-page-title data-i18n></span><span class="title-tagline" data-page-subtitle data-i18n></span></span></h1>
-                    <div class="app-page-toolbar-actions">
-                        <a href="index.html" class="home-link" title="INNERSCOPE" data-i18n="text,title">INNERSCOPE</a>
-                        <div class="settings-menu-wrapper">
-                            <!-- INCLUDE partials/settings-toolbar-controls.html -->
-                            <div id="settings_menu" class="settings-menu" style="display: none;">
-                                <!-- INCLUDE partials/settings-menu-common-mid.html -->
-                                <!-- INCLUDE partials/settings-menu-trailing-admin.html -->
-                            </div>
-                        </div>
-                    </div>
-                </header>
+                <!-- INCLUDE partials/app-header.html -->
 
                 <div class="chat-cached-history-bar">
                     <div class="semantic-search-input-wrapper chat-prompt-history-wrapper">
@@ -100,7 +88,7 @@
                             </div>
                             <div class="textarea-wrapper chat-prompt-textarea-block">
                                 <div class="semantic-search-input-wrapper chat-prompt-history-wrapper">
-                                    <textarea id="chat_user_text"></textarea>
+                                    <textarea id="chat_user_text" data-typewriter></textarea>
                                     <ul id="chat_user_prompt_history_dropdown" class="semantic-search-history-dropdown"></ul>
                                 </div>
                             </div>
@@ -177,6 +165,16 @@
         <div class="resizer" id="resizer"></div>
 
         <section class="right_panel">
+            <div class="empty-state empty-state-dashed">
+                <svg class="empty-state-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M8 12 L40 12 L40 36 L8 36 Z"/>
+                    <line x1="14" y1="20" x2="34" y2="20"/>
+                    <line x1="14" y1="26" x2="28" y2="26"/>
+                    <line x1="14" y1="32" x2="32" y2="32"/>
+                </svg>
+                <div class="empty-state-title" data-i18n>No conversation yet</div>
+                <div class="empty-state-description" data-i18n>Type your message on the left, then click Send to chat and inspect every token the model produces.</div>
+            </div>
             <div class="chat-right-stack">
                 <div class="chat-readout-body">
                     <div id="chat_segments_container" class="chat-segments-container"></div>

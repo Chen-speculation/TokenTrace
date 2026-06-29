@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 
 <head>
     <meta charset="UTF-8">
@@ -15,21 +15,7 @@
     <main class="main_frame">
         <section class="left_panel">
             <div class="floating_content">
-                <header class="app-page-toolbar app-page-toolbar--bleed">
-                    <h1 class="page-toolbar-title"><span class="title-main-line"><span data-page-title data-i18n></span><span class="title-tagline" data-page-subtitle data-i18n></span></span></h1>
-                    <div class="app-page-toolbar-actions">
-                        <a href="index.html" class="home-link" title="INNERSCOPE" data-i18n="text,title">INNERSCOPE</a>
-                        <a href="compare.html?showTextRender=1&demos=/quick-start-1.json,/quick-start-2.json" target="_blank" class="compare-link" style="display: none;" title="Compare analysis results" data-i18n="text,title">Compare results</a>
-                        <div class="settings-menu-wrapper">
-                            <!-- INCLUDE partials/settings-toolbar-controls.html -->
-                            <div id="settings_menu" class="settings-menu" style="display: none;">
-                                <!-- INCLUDE partials/settings-menu-analysis.html -->
-                                <!-- INCLUDE partials/settings-menu-common-mid.html -->
-                                <!-- INCLUDE partials/settings-menu-trailing-admin.html -->
-                            </div>
-                        </div>
-                    </div>
-                </header>
+                <!-- INCLUDE partials/app-header-analysis.html -->
 
                 <!-- 首页介绍内容容器（由 JS 动态加载） -->
                 <section id="home-intro-content" class="intro-section">
@@ -67,7 +53,7 @@
                         </div>
                     </div>
                     <div class="textarea-wrapper">
-                        <textarea id="test_text"></textarea>
+                        <textarea id="test_text" data-typewriter></textarea>
                         <div class="button-group">
                             <div class="button-left">
                                 <div class="button-left-stack">
@@ -176,6 +162,16 @@
         <div class="resizer" id="resizer"></div>
 
         <section class="right_panel">
+            <div class="empty-state empty-state-dashed">
+                <svg class="empty-state-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="6" y="14" width="36" height="22" rx="0"/>
+                    <line x1="12" y1="20" x2="30" y2="20"/>
+                    <line x1="12" y1="26" x2="36" y2="26"/>
+                    <line x1="12" y1="32" x2="24" y2="32"/>
+                </svg>
+                <div class="empty-state-title" data-i18n>No analysis yet</div>
+                <div class="empty-state-description" data-i18n>Paste text on the left, then click Analyze to see token-level information density.</div>
+            </div>
             <div id="results">
                 <div id="major_tooltip" class="tooltip">
                     <div class="currentToken"></div>

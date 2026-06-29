@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 
 <head>
     <meta charset="UTF-8">
@@ -13,19 +13,7 @@
     <main class="main_frame">
         <section class="left_panel">
             <div class="floating_content">
-                <header class="app-page-toolbar app-page-toolbar--bleed">
-                    <h1 class="page-toolbar-title"><span class="title-main-line"><span data-page-title data-i18n></span><span class="title-tagline" data-page-subtitle data-i18n></span></span></h1>
-                    <div class="app-page-toolbar-actions">
-                        <a href="index.html" class="home-link" title="INNERSCOPE" data-i18n="text,title">INNERSCOPE</a>
-                        <div class="settings-menu-wrapper">
-                            <!-- INCLUDE partials/settings-toolbar-controls.html -->
-                            <div id="settings_menu" class="settings-menu" style="display: none;">
-                                <!-- INCLUDE partials/settings-menu-common-mid.html -->
-                                <!-- INCLUDE partials/settings-menu-trailing-admin.html -->
-                            </div>
-                        </div>
-                    </div>
-                </header>
+                <!-- INCLUDE partials/app-header.html -->
 
                 <div class="chat-cached-history-bar chat-cached-history-bar--dual">
                     <div class="semantic-search-input-wrapper chat-prompt-history-wrapper gen-attr-cached-demos-wrap">
@@ -450,7 +438,16 @@
         <div class="resizer" id="resizer"></div>
 
         <section class="right_panel">
-            <div id="results" class="attribution-inspector-surface gen-attr-results-surface LMF"></div>
+            <div id="results" class="attribution-inspector-surface gen-attr-results-surface LMF">
+                <div class="empty-state empty-state-dashed" id="causal_flow_empty">
+                    <svg class="empty-state-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="24" cy="24" r="20"/>
+                        <path d="M8 24 L16 24 L20 14 L28 34 L32 24 L40 24"/>
+                    </svg>
+                    <div class="empty-state-title" data-i18n>No attribution data yet</div>
+                    <div class="empty-state-description" data-i18n>Enter a prompt on the left, then click Analyze to see the causal flow DAG.</div>
+                </div>
+            </div>
         </section>
     </main>
 

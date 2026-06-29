@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 
 <head>
     <meta charset="UTF-8">
@@ -15,26 +15,19 @@
     <div class="main_frame">
         <!-- Grid 容器包裹工具栏和内容区 -->
         <div class="compare-wrapper">
-            <!-- 顶部工具栏 -->
-            <div class="app-page-toolbar">
-                <h1 class="compare-toolbar-title">
-                    <span class="compare-toolbar-title-app" data-i18n>Info Highlight</span>
-                    <span class="compare-toolbar-title-sep" aria-hidden="true">/</span>
-                    <span class="compare-toolbar-title-page" data-i18n>Compare</span>
-                </h1>
-                <div class="app-page-toolbar-actions">
-                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
-                        <input type="checkbox" id="show_text_render_toggle">
-                        <span data-i18n>Show Text Rendering</span>
-                    </label>
-                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
-                        <input type="checkbox" id="model_diff_mode_toggle">
-                        <span data-i18n>Diff Mode</span>
-                    </label>
-                    <button id="edit_mode_toggle" data-i18n>Edit</button>
-                    <button id="clear_demos_btn" data-i18n>Clear</button>
-                    <button id="add_demos_btn" data-i18n>Add</button>
-                </div>
+            <!-- INCLUDE partials/app-header.html -->
+            <div class="app-header-extra compare-header-extra">
+                <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                    <input type="checkbox" id="show_text_render_toggle">
+                    <span data-i18n>Show Text Rendering</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                    <input type="checkbox" id="model_diff_mode_toggle">
+                    <span data-i18n>Diff Mode</span>
+                </label>
+                <button id="edit_mode_toggle" data-i18n>Edit</button>
+                <button id="clear_demos_btn" data-i18n>Clear</button>
+                <button id="add_demos_btn" data-i18n>Add</button>
             </div>
 
             <!-- 对比结果展示区 -->

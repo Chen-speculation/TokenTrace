@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 
 <head>
     <meta charset="UTF-8">
@@ -13,19 +13,7 @@
     <main class="main_frame">
         <section class="left_panel">
             <div class="floating_content">
-                <header class="app-page-toolbar app-page-toolbar--bleed">
-                    <h1 class="page-toolbar-title"><span class="title-main-line"><span data-page-title data-i18n></span><span class="title-tagline" data-page-subtitle data-i18n></span></span></h1>
-                    <div class="app-page-toolbar-actions">
-                        <a href="index.html" class="home-link" title="INNERSCOPE" data-i18n="text,title">INNERSCOPE</a>
-                        <div class="settings-menu-wrapper">
-                            <!-- INCLUDE partials/settings-toolbar-controls.html -->
-                            <div id="settings_menu" class="settings-menu" style="display: none;">
-                                <!-- INCLUDE partials/settings-menu-common-mid.html -->
-                                <!-- INCLUDE partials/settings-menu-trailing-admin.html -->
-                            </div>
-                        </div>
-                    </div>
-                </header>
+                <!-- INCLUDE partials/app-header.html -->
 
                 <div class="chat-cached-history-bar">
                     <div class="semantic-search-input-wrapper chat-prompt-history-wrapper">
@@ -155,6 +143,15 @@
         <div class="resizer" id="resizer"></div>
 
         <section class="right_panel">
+            <div class="empty-state empty-state-dashed">
+                <svg class="empty-state-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="24" cy="24" r="16"/>
+                    <path d="M24 8 L24 40 M8 24 L40 24"/>
+                    <circle cx="24" cy="24" r="6"/>
+                </svg>
+                <div class="empty-state-title" data-i18n>No attribution yet</div>
+                <div class="empty-state-description" data-i18n>Enter context and target text on the left, then click Analyze to see which words drive the prediction.</div>
+            </div>
             <div class="attribution-method-panels">
                 <div class="attribution-gradient-panel">
                     <div class="attribution-panel-label" data-i18n>Gradient</div>
@@ -199,6 +196,19 @@
                 </span>
             </div>
             <div id="attribution_consistency_readout" class="attribution-consistency-readout"></div>
+            <div class="attr-ae-panel" id="attr_ae_panel" style="display:none;">
+                <div class="attribution-panel-label" data-i18n>Activation Explainer</div>
+                <div class="ae-trigger-row">
+                    <span class="ae-trigger-hint" data-i18n>Click a context token above, then explain its activation</span>
+                    <button type="button" id="attr_ae_trigger" class="text-action-btn" disabled data-i18n>Explain activation</button>
+                </div>
+                <div id="attr_ae_loading" class="ae-loading" style="display:none" data-i18n>Loading activation explanation…</div>
+                <div id="attr_ae_result" class="ae-result" style="display:none">
+                    <div class="ae-field"><span class="ae-label" data-i18n>Explanation</span><span id="attr_ae_explanation" class="ae-value"></span></div>
+                    <div class="ae-field"><span class="ae-label" data-i18n>Confidence</span><span id="attr_ae_cosine" class="ae-cosine"></span><span>&nbsp;(roundtrip cosine)</span></div>
+                </div>
+                <div id="attr_ae_error" class="ae-error" style="display:none"></div>
+            </div>
         </section>
     </main>
 

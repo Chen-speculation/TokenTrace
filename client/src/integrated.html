@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <title data-i18n>Integrated Lab - All six lenses in one unified workflow</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="integrated.css">
+</head>
+
+<body class="integrated-page gen-attribute-page">
+
+    <main class="main_frame integrated-frame">
+        <section class="left_panel integrated-left">
+            <div class="floating_content">
+                <!-- INCLUDE partials/app-header.html -->
+
+                <section class="input-section">
+                    <div class="input-header">
+                        <span class="semantic-submode-label" data-i18n>Prompt</span>
+                        <div class="text-action-buttons-top">
+                            <div class="textarea-counter" id="integrated_text_count_display">
+                                <span id="integrated_text_count_value">0</span>
+                                <span data-i18n>chars</span>
+                            </div>
+                            <button type="button" id="integrated_clear_btn"
+                                    class="text-action-btn" data-i18n>Clear</button>
+                        </div>
+                    </div>
+                    <div class="textarea-wrapper chat-prompt-textarea-block">
+                        <textarea id="integrated_prompt_text" data-typewriter></textarea>
+                    </div>
+
+                    <!-- Model + max tokens -->
+                    <div class="semantic-submode-row" id="integrated_options_row">
+                        <span class="semantic-submode-group">
+                            <label class="semantic-submode-label" for="integrated_model_select">Model</label>
+                            <select id="integrated_model_select" class="semantic-submode-control"></select>
+                        </span>
+                        <span class="semantic-submode-group">
+                            <label class="semantic-submode-label" for="integrated_max_tokens_input">Max tokens</label>
+                            <input type="number" id="integrated_max_tokens_input" class="semantic-submode-control gen-attr-dag-measure-width-input" value="30" min="1" max="200" />
+                        </span>
+                    </div>
+
+                    <div class="textarea-wrapper chat-prompt-actions-row">
+                        <div class="button-group">
+                            <div class="button-left">
+                                <div class="button-left-primary">
+                                    <button type="button" id="integrated_submit_btn"
+                                            class="primary-btn inactive" disabled data-i18n>Start</button>
+                                    <div class="generation-status-slot loader-small-container">
+                                        <div class="loadersmall"></div>
+                                        <span id="integrated_complete_reason"
+                                              class="generation-end-reason"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </section>
+
+        <div class="resizer" id="resizer_left"></div>
+
+        <section class="center_panel integrated-center">
+            <div id="integrated_dag_results" class="attribution-inspector-surface gen-attr-results-surface LMF">
+                <div class="empty-state empty-state-dashed" id="integrated_empty">
+                    <svg class="empty-state-icon" viewBox="0 0 48 48" fill="none"
+                         stroke="currentColor" stroke-width="1" stroke-linecap="round"
+                         stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="24" cy="24" r="20"/>
+                        <path d="M8 24 L16 24 L20 14 L28 34 L32 24 L40 24"/>
+                    </svg>
+                    <div class="empty-state-title" data-i18n>No attribution data yet</div>
+                    <div class="empty-state-description" data-i18n>Enter a prompt on the left, then click Start to generate the causal flow DAG. Click any node to explore all six lenses.</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="resizer" id="resizer_right"></div>
+
+        <section class="right_panel integrated-right">
+            <nav class="integrated-panel-tabs" id="integrated_panel_tabs">
+                <button type="button" class="integrated-tab-btn is-active"
+                        data-panel="highlight" data-i18n>Highlight</button>
+                <button type="button" class="integrated-tab-btn"
+                        data-panel="attribution" data-i18n>Attribution</button>
+                <button type="button" class="integrated-tab-btn"
+                        data-panel="logit" data-i18n>Logit Lens</button>
+                <button type="button" class="integrated-tab-btn"
+                        data-panel="branch" data-i18n>Branch</button>
+                <button type="button" class="integrated-tab-btn"
+                        data-panel="activation" data-i18n>Activation</button>
+            </nav>
+
+            <div class="integrated-panel-body">
+                <div class="integrated-panel-placeholder" id="integrated_panel_placeholder">
+                    <div class="empty-state-title" data-i18n>Select a token</div>
+                    <div class="empty-state-description" data-i18n>Click a node in the DAG to inspect it with all six lenses.</div>
+                </div>
+
+                <div class="integrated-panel-content" id="integrated_highlight_panel" hidden>
+                    <div class="attribution-panel-label" data-i18n>Info Highlight</div>
+                    <div id="integrated_highlight_surface" class="integrated-highlight-surface"></div>
+                </div>
+
+                <div class="integrated-panel-content" id="integrated_attribution_panel" hidden>
+                    <div class="attribution-panel-label" data-i18n>Context Attribution</div>
+                    <div id="integrated_attribution_surface" class="attribution-inspector-surface LMF"></div>
+                </div>
+
+                <div class="integrated-panel-content" id="integrated_logit_panel" hidden>
+                    <div class="attribution-panel-label" data-i18n>Logit Lens</div>
+                    <div id="integrated_logit_heatmap" class="logit-lens-heatmap"></div>
+                    <div id="integrated_logit_trajectory" class="logit-lens-trajectory" style="height:auto;min-height:0"></div>
+                </div>
+
+                <div class="integrated-panel-content" id="integrated_branch_panel" hidden>
+                    <div class="attribution-panel-label" data-i18n>Branch Tree</div>
+                    <div id="integrated_branch_surface" class="branch-tree-surface"></div>
+                </div>
+
+                <div class="integrated-panel-content" id="integrated_activation_panel" hidden>
+                    <div class="attribution-panel-label" data-i18n>Activation Explainer</div>
+                    <div id="integrated_ae_loading" class="ae-loading" style="display:none" data-i18n>Loading activation explanation…</div>
+                    <div id="integrated_ae_result" class="ae-result" style="display:none">
+                        <div class="ae-field"><span class="ae-label" data-i18n>Explanation</span><span id="integrated_ae_explanation" class="ae-value"></span></div>
+                        <div class="ae-field"><span class="ae-label" data-i18n>Confidence</span><span id="integrated_ae_cosine" class="ae-cosine"></span></div>
+                    </div>
+                    <div id="integrated_ae_error" class="ae-error" style="display:none"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="vendor.js"></script>
+    <script src="integrated.js"></script>
+</body>
+
+</html>

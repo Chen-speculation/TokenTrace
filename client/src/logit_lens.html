@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 
 <head>
     <meta charset="UTF-8">
@@ -13,19 +13,7 @@
     <main class="main_frame">
         <section class="left_panel">
             <div class="floating_content">
-                <header class="app-page-toolbar app-page-toolbar--bleed">
-                    <h1 class="page-toolbar-title"><span class="title-main-line"><span data-page-title data-i18n></span><span class="title-tagline" data-page-subtitle data-i18n></span></span></h1>
-                    <div class="app-page-toolbar-actions">
-                        <a href="index.html" class="home-link" title="INNERSCOPE" data-i18n="text,title">INNERSCOPE</a>
-                        <div class="settings-menu-wrapper">
-                            <!-- INCLUDE partials/settings-toolbar-controls.html -->
-                            <div id="settings_menu" class="settings-menu" style="display: none;">
-                                <!-- INCLUDE partials/settings-menu-common-mid.html -->
-                                <!-- INCLUDE partials/settings-menu-trailing-admin.html -->
-                            </div>
-                        </div>
-                    </div>
-                </header>
+                <!-- INCLUDE partials/app-header.html -->
 
                 <section id="logit_lens_examples" class="page-examples-section"></section>
 
@@ -85,20 +73,31 @@
                 </section>
             </div>
 
-            <div class="logit-lens-panel" id="ae_panel" style="display:none;">
-                <div class="attribution-panel-label">Activation Explainer / 激活解释</div>
-                <div id="ae_loading" class="ae-loading" style="display:none">🧠 正在推理... 激活解释需要较长时间（约 5-15 秒）</div>
-                <div id="ae_result" class="ae-result" style="display:none">
-                    <div class="ae-field"><span class="ae-label">解释</span><span id="ae_explanation" class="ae-value"></span></div>
-                    <div class="ae-field"><span class="ae-label">可信度</span><span id="ae_cosine" class="ae-cosine"></span><span>&nbsp;(roundtrip cosine)</span></div>
-                </div>
-                <div id="ae_error" class="ae-error" style="display:none"></div>
-            </div>
         </section>
 
         <div class="resizer" id="resizer"></div>
 
         <section class="right_panel">
+            <div class="empty-state empty-state-dashed">
+                <svg class="empty-state-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M8 32 L16 28 L24 20 L32 12 L40 8"/>
+                    <circle cx="16" cy="28" r="3"/>
+                    <circle cx="24" cy="20" r="3"/>
+                    <circle cx="32" cy="12" r="3"/>
+                    <circle cx="40" cy="8" r="3"/>
+                </svg>
+                <div class="empty-state-title" data-i18n>No logit lens yet</div>
+                <div class="empty-state-description" data-i18n>Enter text on the left, then click Analyze to see how the model's confidence builds layer by layer.</div>
+            </div>
+            <div class="logit-lens-panel" id="ae_panel" style="display:none;">
+                <div class="attribution-panel-label" data-i18n>Activation Explainer</div>
+                <div id="ae_loading" class="ae-loading" style="display:none" data-i18n>Loading activation explanation…</div>
+                <div id="ae_result" class="ae-result" style="display:none">
+                    <div class="ae-field"><span class="ae-label" data-i18n>Explanation</span><span id="ae_explanation" class="ae-value"></span></div>
+                    <div class="ae-field"><span class="ae-label" data-i18n>Confidence</span><span id="ae_cosine" class="ae-cosine"></span><span>&nbsp;(roundtrip cosine)</span></div>
+                </div>
+                <div id="ae_error" class="ae-error" style="display:none"></div>
+            </div>
             <div class="logit-lens-panel" id="logit_lens_panel" style="display:none;">
                 <div class="attribution-panel-label" data-i18n>Logit Lens</div>
                 <div class="logit-lens-chart-hint" data-i18n>点击折线上的点，查看该层的候选词分布</div>

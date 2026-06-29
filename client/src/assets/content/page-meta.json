@@ -1,8 +1,8 @@
 {
-  "navPageKeys": ["causalFlow", "analysis", "attribution", "logitLens", "branchTree", "chat"],
+  "navPageKeys": ["causalFlow", "analysis", "attribution", "logitLens", "branchTree", "chat", "integrated"],
   "pages": {
     "home": {
-      "title": "INNERSCOPE",
+      "title": "TokenTrace",
       "subtitle": "A toolbox for looking inside language models",
       "heartline": "",
       "formula": ""
@@ -29,13 +29,23 @@
     },
     "logitLens": {
       "title": "Logit Lens",
-      "subtitle": "Watch how the model's confidence builds layer by layer",
+      "subtitle": "Watch confidence build layer by layer, with AI-explained activations",
       "href": "logit_lens.html"
     },
     "branchTree": {
       "title": "Branch Tree",
       "subtitle": "Type a prefix and explore what the model might say next",
       "href": "branch_tree.html"
+    },
+    "compare": {
+      "title": "Info Highlight",
+      "subtitle": "Compare",
+      "href": "compare.html"
+    },
+    "integrated": {
+      "title": "Integrated Lab",
+      "subtitle": "All six lenses in one unified workflow",
+      "href": "integrated.html"
     }
   }
 }
