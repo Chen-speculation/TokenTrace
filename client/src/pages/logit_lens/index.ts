@@ -17,6 +17,7 @@ import URLHandler from '../../shared/core/URLHandler';
 import { createToast } from '../../shared/ui/toast';
 import { translateApiErrorMessage } from '../../shared/core/errorUtils';
 import type { LogitLensResult, LogitLensLayer, ActivationExplainResult } from '../../shared/api/GLTR_API';
+import { runActivationExplain } from '../../shared/prediction_attribution/activationExplainer';
 import { lsReadEnum, lsWriteString } from '../../shared/storage/localStorageHelpers';
 
 d3.selectAll('.loadersmall').style('display', 'none');
@@ -356,58 +357,15 @@ function renderLayerCard(): void {
 }
 
 // --- Activation Explainer ---
-async function runActivationExplain(context: string, targetToken: string): Promise<void> {
-    const panel = document.getElementById('ae_panel');
-    const loading = document.getElementById('ae_loading');
-    const result = document.getElementById('ae_result');
-    const errEl = document.getElementById('ae_error');
-    if (!panel || !loading || !result || !errEl) return;
-
-    panel.style.display = 'block';
-    loading!.style.display = '';
-    result.style.display = 'none';
-    errEl.style.display = 'none';
-
-    try {
-        // 1) tokenize 找出 target token 的 index
-        const tok = await api.tokenize(context, currentModelVariant());
-        const spans = tok?.spans ?? [];
-        let tokenIndex = -1;
-        for (let i = 0; i < spans.length; i++) {
-            if (spans[i].raw === targetToken) { tokenIndex = i; break; }
-        }
-        if (tokenIndex < 0) {
-            // fallback：取最后一个 token
-            tokenIndex = spans.length - 1;
-        }
-
-        // 2) call activation-explain
-        const ae = await api.explainActivation(currentModelVariant(), 'logit_lens', context, tokenIndex);
-        if (!ae.success) {
-            errEl.textContent = ae.message || tr('Activation explain failed');
-            errEl.style.display = '';
-            return;
-        }
-
-        // 3) render
-        const cosine = ae.roundtrip_cosine ?? 0;
-        let cls = 'cosine-low';
-        if (cosine >= 0.70) cls = 'cosine-excellent';
-        else if (cosine >= 0.60) cls = 'cosine-good';
-        else if (cosine >= 0.50) cls = 'cosine-fair';
-        const cosineHtml = `<span class="ae-cosine ${cls}">${(cosine * 100).toFixed(1)}%</span>`;
-
-        const explanationEl = document.getElementById('ae_explanation');
-        const cosineEl = document.getElementById('ae_cosine');
-        if (explanationEl) explanationEl.textContent = ae.explanation ?? '';
-        if (cosineEl) cosineEl.innerHTML = cosineHtml;
-        result.style.display = '';
-    } catch (err: unknown) {
-        errEl.textContent = (err instanceof Error ? err.message : String(err));
-        errEl.style.display = '';
-    } finally {
-        loading!.style.display = 'none';
-    }
+async function runActivationExplainAe(context: string, targetToken: string): Promise<void> {
+    await runActivationExplain(api, currentModelVariant(), 'logit_lens', context, targetToken, {
+        panelId: 'ae_panel',
+        loadingId: 'ae_loading',
+        resultId: 'ae_result',
+        errorId: 'ae_error',
+        explanationId: 'ae_explanation',
+        cosineId: 'ae_cosine',
+    });
 }
 
 // --- 主分析逻辑 ---
@@ -427,7 +385,7 @@ async function runAnalyze(): Promise<void> {
 
             // 自动触发 Activation Explainer
             if (context && ll.target_token) {
-                void runActivationExplain(context, ll.target_token);
+                void runActivationExplainAe(context, ll.target_token);
             }
         } else {
             showAlertDialog(tr('Logit Lens'), ll.message || tr('Analysis failed'));

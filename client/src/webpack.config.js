@@ -35,6 +35,7 @@ module.exports = {
         causal_flow: './pages/causal_flow/index.ts',
         logit_lens: './pages/logit_lens/index.ts',
         branch_tree: './pages/branch_tree/index.ts',
+        integrated: './pages/integrated/index.ts',
     },
     module: {
         rules: [
@@ -121,7 +122,7 @@ module.exports = {
             },
             {
             test: /\.html$/,
-            exclude: /index\.html|analysis\.html|compare\.html|chat\.html|attribution\.html|causal_flow\.html|logit_lens\.html|branch_tree\.html/,
+            exclude: /index\.html|analysis\.html|compare\.html|chat\.html|attribution\.html|causal_flow\.html|logit_lens\.html|branch_tree\.html|integrated\.html/,
             type: 'asset/source'
             }
         ]
@@ -158,12 +159,13 @@ module.exports = {
                 // so we only need to copy the HTML shell into the dist folder.
                 copyHtmlWithIncludesAndPageMeta('index.html', 'index.html', 'home'),
                 copyHtmlWithIncludesAndPageMeta('analysis.html', 'analysis.html', 'analysis'),
-                { from: 'compare.html', to: 'compare.html' },
+                copyHtmlWithIncludesAndPageMeta('compare.html', 'compare.html', 'compare'),
                 copyHtmlWithIncludesAndPageMeta('chat.html', 'chat.html', 'chat'),
                 copyHtmlWithIncludesAndPageMeta('attribution.html', 'attribution.html', 'attribution'),
                 copyHtmlWithIncludesAndPageMeta('causal_flow.html', 'causal_flow.html', 'causalFlow'),
                 copyHtmlWithIncludesAndPageMeta('logit_lens.html', 'logit_lens.html', 'logitLens'),
                 copyHtmlWithIncludesAndPageMeta('branch_tree.html', 'branch_tree.html', 'branchTree'),
+                copyHtmlWithIncludesAndPageMeta('integrated.html', 'integrated.html', 'integrated'),
             ]
         }),
         new GenAttributeDemoManifestPlugin(),

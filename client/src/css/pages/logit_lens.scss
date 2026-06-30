@@ -85,36 +85,65 @@
 }
 
 // ---- Activation Explainer ----
+#ae_panel {
+  border: 1px solid var(--border-color);
+  border-radius: 0;
+  background: transparent;
+  padding: 1rem 1.25rem;
+
+  .attribution-panel-label {
+    font-family: var(--font-icon), 'JetBrains Mono', monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+}
+
 .ae-loading {
-  font-size: 9pt;
+  font-family: var(--font-icon), 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
   color: var(--text-muted);
-  padding: 12px 0;
+  padding: 1rem 0;
   text-align: center;
+  animation: ae-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes ae-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
 }
 
 .ae-result {
-  margin-top: 8px;
+  margin-top: 0.5rem;
 }
 
 .ae-field {
-  margin-bottom: 8px;
+  margin-bottom: 0.75rem;
   display: flex;
   align-items: flex-start;
-  gap: 8px;
+  gap: 0.75rem;
 }
 
 .ae-label {
-  font-size: 10pt;
+  font-family: var(--font-icon), 'JetBrains Mono', monospace;
+  font-size: 0.6875rem;
   font-weight: 600;
-  color: var(--text-secondary);
-  min-width: 48px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  min-width: 60px;
   flex-shrink: 0;
+  padding-top: 2px;
 }
 
 .ae-value {
-  font-size: 10pt;
-  color: var(--text-primary);
-  line-height: 1.5;
+  font-size: 0.875rem;
+  color: var(--text-color);
+  line-height: 1.6;
 }
 
 .ae-cosine {
@@ -127,9 +156,9 @@
 }
 
 .ae-error {
-  font-size: 9pt;
+  font-size: 0.75rem;
   color: #dc2626;
-  padding: 8px 0;
+  padding: 0.5rem 0;
 }
 
 // ---- 层卡片 ----

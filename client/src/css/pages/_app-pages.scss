@@ -4,6 +4,7 @@
 
 // 样式模块（Sass 新模块系统）
 @use "shared-chrome";
+@use "app-header";
 @use "violin";
 @use "responsive";
 @use "demo-list";
@@ -47,28 +48,109 @@ a {
 textarea{
   font-family: inherit;
   width: 100%;
-  height: 50px;  // 可以保留默认高度
-  min-height: 50px;  // 设置最小高度
-  max-height: 300px;  // 设置最大高度限制，避免占用过多空间
+  height: 50px;
+  min-height: 50px;
+  max-height: 300px;
   box-sizing: border-box;
-  resize: vertical;  // 改为只允许垂直调整大小
-  background-color: var(--input-bg);
+  resize: vertical;
+  background: transparent;
   color: var(--text-color);
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  transition: color 0.2s ease;
+
+  &:focus {
+    outline: none;
+  }
+
+  &::placeholder {
+    color: var(--text-muted);
+    opacity: 0.7;
+    font-size: 0.9em;
+    transition: opacity 0.2s ease, color 0.2s ease;
+  }
+
+  &:focus::placeholder {
+    color: color-mix(in srgb, var(--accent-color) 40%, var(--text-muted));
+    opacity: 1;
+  }
+}
+
+input[type="text"],
+input[type="number"],
+input[type="url"],
+input[type="search"] {
+  border-radius: 0;
+  padding: 6px 10px;
+  background: transparent;
   border: 1px solid var(--input-border);
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-color) 50%, transparent);
+  }
+
+  &::placeholder {
+    color: var(--text-muted);
+    opacity: 0.7;
+    font-size: 0.9em;
+    transition: opacity 0.2s ease, color 0.2s ease;
+  }
+
+  &:focus::placeholder {
+    color: color-mix(in srgb, var(--accent-color) 40%, var(--text-muted));
+    opacity: 1;
+  }
 }
 
 .textarea-wrapper {
   width: 100%;
-  box-sizing: border-box;  // 确保宽度计算包含padding和border
+  box-sizing: border-box;
   position: relative;
-  
+
+  // 只含 textarea 的 wrapper（chat / attribution 的输入框）→ 作为视觉容器
+  &:not(:has(.button-group)) {
+    border: 1px solid var(--input-border);
+    border-radius: 0;
+    background: var(--input-bg);
+    padding: 10px 12px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    &:focus-within {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-color) 50%, transparent);
+    }
+  }
+
+  // 含 button-group 的 wrapper（analysis 页面）→ textarea 自带边框
+  &:has(.button-group) {
+    textarea {
+      border: 1px solid var(--input-border);
+      background: var(--input-bg);
+      padding: 8px 10px;
+      border-radius: 0;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+      &:focus {
+        outline: none;
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-color) 50%, transparent);
+      }
+    }
+  }
+
   textarea {
     width: 100%;
-    box-sizing: border-box;  // 确保textarea宽度计算正确
-    resize: vertical;  // 修改这里：改为只允许垂直调整大小
+    box-sizing: border-box;
+    resize: vertical;
   }
-  
+
   .textarea-counter {
     font-size: 8pt;
     color: var(--text-muted);
@@ -204,10 +286,16 @@ select {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  border-radius: 4px;
+  border-radius: 0;
   border: 1px solid var(--input-border);
   outline: 0;
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-color) 50%, transparent);
+  }
 }
 
 .slider {
@@ -614,22 +702,15 @@ select {
   }
 }
 
-// 内联复选框（在demo名左侧，不影响行距）
+// 内联复选框 — 使用全局 input[type=checkbox] 精致样式，仅微调尺寸
 .demo-checkbox-inline {
-  cursor: pointer;
-  margin-right: 1px; // 减小间距，让复选框更贴近demo项
-  width: 14px;
-  height: 14px;
-  // 使用middle对齐，让复选框垂直居中
+  margin-right: 1px;
   vertical-align: middle;
-  // 确保复选框不会影响行距
   display: inline-block;
-  // 微调位置，确保完全居中
   margin-top: 0;
   margin-bottom: 0;
-  // 确保复选框在demo-item的最左边
   flex-shrink: 0;
-  order: -1; // 确保复选框在最左边
+  order: -1;
 }
 
 // 日间模式和夜间模式下的复选框样式
@@ -1148,4 +1229,270 @@ select {
       background: var(--button-hover-bg, var(--bg-elevated));
     }
   }
+}
+
+// ===== Swiss Style 统一覆盖层 =====
+// 将子页面主体视觉与首页设计语言对齐：暖纸色背景、细线分隔、方角无阴影
+// 精致原则：层次靠细线和色差，hover 靠背景色微变，不靠位移和阴影
+
+// 0) 全局 Checkbox 精致化 — 方角 + scale 勾号动画 + 琥珀色选中
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--input-border);
+  border-radius: 0;
+  background: var(--input-bg);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+  display: inline-grid;
+  place-content: center;
+  flex-shrink: 0;
+  margin: 0;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+
+  &::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    transform: scale(0);
+    transition: transform 0.15s ease-in-out;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  &:checked {
+    border-color: var(--accent-color);
+    background-color: var(--accent-color);
+
+    &::before {
+      transform: scale(1);
+    }
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-color) 50%, transparent);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+// radio button 精致化 — 圆形外框 + 中心圆点动画
+input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--input-border);
+  border-radius: 50%;
+  background: var(--input-bg);
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  position: relative;
+  flex-shrink: 0;
+  margin: 0;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--accent-color);
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.15s ease-in-out;
+  }
+
+  &:checked {
+    border-color: var(--accent-color);
+
+    &::after {
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-color) 50%, transparent);
+  }
+}
+
+// 1) 背景统一为暖纸色
+body {
+  background-color: var(--app-bg);
+}
+
+// 2) 面板标签：等宽小号大写
+.attribution-panel-label {
+  font-family: var(--font-icon);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+// 3) 按钮样式已在 _buttons.scss 中统一为 Swiss Style（方角、无阴影、hover 背景色微变）
+
+// 4) 表单控件 focus 光环已在上方基础样式中统一处理
+
+// 5) 统一 Swiss Style 方角 — 覆盖各组件 SCSS 中的残留圆角
+// 排除 radio(50%)/checkbox/光圈SVG/DAG节点等需要保留圆角的元素
+.gen-attribute-page,
+.analysis-page,
+.chat-page,
+.attribution-page,
+.logit-lens-page,
+.branch-tree-page {
+  .settings-menu,
+  .settings-dropdown-in-menu,
+  .dialog,
+  .demo-item,
+  .semantic-search-history-dropdown,
+  .file-input-wrapper,
+  .file-input-wrapper .file-input-button,
+  .toast,
+  .tooltip,
+  .ll-layer-card,
+  .ll-layer-code,
+  .ll-rank-badge,
+  .ll-bar-track,
+  .ll-bar-fill,
+  .page-example-btn,
+  .demo-checkbox-inline,
+  .gen-attr-dag-measure-width-input,
+  .text-action-btn,
+  .primary-btn {
+    border-radius: 0;
+  }
+}
+
+// 6) 其他 UI 元素方角已在上方统一处理
+
+// 8) logit-lens 面板：细线边框透明背景
+.logit-lens-panel {
+  border-radius: 0;
+  background: transparent;
+  border: 1px solid var(--border-color);
+}
+
+// 9) 桌面端面板背景：全部透明，继承 body 暖纸色
+@media (min-width: $breakpoint-tablet) {
+  html:not([data-force-narrow]) {
+    .left_panel {
+      background-color: transparent;
+    }
+
+    .right_panel {
+      background: transparent;
+
+      > #results > .LMF {
+        padding: 16px 20px;
+      }
+    }
+
+    .resizer::before {
+      width: 1px;
+      background: var(--border-color);
+    }
+  }
+}
+
+// 10) input-header / demo-header 标签：等宽小号大写
+.input-header > span:first-child,
+.demo-header > span:first-child {
+  font-family: var(--font-icon);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+// 11) semantic-submode-label：等宽小号
+.semantic-submode-label {
+  font-family: var(--font-icon);
+  font-size: 0.6875rem;
+  letter-spacing: 0.03em;
+}
+
+// 12) 右面板 attribution 子面板：透明背景
+.right_panel .attribution-method-panels > div {
+  border-radius: 0;
+}
+
+// 13) 空状态设计 — 虚线框 + 细线图标 + 引导文字
+// 通用：当结果容器没有内容时显示空状态，有内容时自动隐藏
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 240px;
+  padding: 40px 24px;
+  text-align: center;
+  margin: 20px;
+
+  .empty-state-icon {
+    width: 36px;
+    height: 36px;
+    color: var(--text-muted);
+    opacity: 0.5;
+  }
+
+  .empty-state-title {
+    font-family: var(--font-icon);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .empty-state-description {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    opacity: 0.8;
+    max-width: 280px;
+    line-height: 1.5;
+  }
+}
+
+.empty-state-dashed {
+  border: 1px dashed var(--border-strong, var(--border-color));
+  border-radius: 0;
+  background: color-mix(in srgb, var(--text-color) 1.5%, transparent);
+}
+
+// 当结果容器有动态分析结果时自动隐藏空状态
+// 1) attribution / chat / branch_tree: 空状态是 .right_panel 直接子元素
+.right_panel:has(#results svg.token-rect) > .empty-state,
+.right_panel:has(#results .attribution-bar) > .empty-state,
+.right_panel:has(#ablation_results svg.token-rect) > .empty-state,
+.right_panel:has(#chat_segments_container .chat-segment) > .empty-state,
+.right_panel:has(#branch_tree_surface svg) > .empty-state,
+.right_panel:has(#logit_lens_panel:not([style*="display:none"])) > .empty-state,
+// 2) analysis: 空状态是 .right_panel 子元素，#results 也是 .right_panel 子元素
+.right_panel:has(#results > .LLF) > .empty-state,
+.right_panel:has(#results svg) > .empty-state,
+// 3) causal_flow: 空状态 #causal_flow_empty 在 #results 内部
+// 当 #results 有非空状态子元素时隐藏空状态
+#results:has(> *:not(.empty-state):not(#causal_flow_empty)) > #causal_flow_empty,
+#results:has(.gen-attr-dag-stack) > #causal_flow_empty,
+#results:has(.gen-attr-dag-node) > #causal_flow_empty,
+#results:has(svg:not(.empty-state-icon)) > #causal_flow_empty {
+  display: none;
 }

@@ -15,13 +15,19 @@ const INCLUDE_RE = /[ \t]*<!--\s*INCLUDE\s+(\S+)\s*-->/g;
  * @returns {string}
  */
 function expandHtmlIncludes(html, srcRoot) {
-    return html.replace(INCLUDE_RE, (_match, relPath) => {
-        const full = path.resolve(srcRoot, relPath);
-        if (!fs.existsSync(full)) {
-            throw new Error(`includeHtmlPartials: missing file ${full} (INCLUDE ${relPath})`);
-        }
-        return fs.readFileSync(full, 'utf8');
-    });
+    let prev;
+    let result = html;
+    do {
+        prev = result;
+        result = result.replace(INCLUDE_RE, (_match, relPath) => {
+            const full = path.resolve(srcRoot, relPath);
+            if (!fs.existsSync(full)) {
+                throw new Error(`includeHtmlPartials: missing file ${full} (INCLUDE ${relPath})`);
+            }
+            return fs.readFileSync(full, 'utf8');
+        });
+    } while (result !== prev);
+    return result;
 }
 
 module.exports = { expandHtmlIncludes };

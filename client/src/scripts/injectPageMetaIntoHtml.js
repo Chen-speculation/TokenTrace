@@ -94,14 +94,15 @@ function injectPageMeta(html, pageKey, doc) {
                 causalFlow: '归因',
                 analysis: '分析',
                 attribution: '归因',
-                logitLens: '解码',
+                logitLens: '解码 · AI',
                 branchTree: '分支',
                 chat: '对话',
+                integrated: '集成',
             };
             const tagText = tagMap[navKey] || '';
 
-            const moduleName = `<div class="nav-landing-module-name" data-i18n="title">${escapeHtmlText(navMeta.title)}</div>`;
-            const moduleDesc = `<div class="nav-landing-module-desc" data-i18n="subtitle">${escapeHtmlText(navMeta.subtitle)}</div>`;
+            const moduleName = `<div class="nav-landing-module-name" data-i18n>${escapeHtmlText(navMeta.title)}</div>`;
+            const moduleDesc = `<div class="nav-landing-module-desc" data-i18n>${escapeHtmlText(navMeta.subtitle)}</div>`;
             const moduleTag = tagText ? `<span class="nav-landing-module-tag">${escapeHtmlText(tagText)}</span>` : '';
 
             // All modules: <a> with data-nav-page, filled at build time with SEO-friendly text
@@ -199,6 +200,17 @@ function injectPageMeta(html, pageKey, doc) {
 
             const inner = `<div class="nav-landing-module-num">${moduleNum}</div>` + moduleName + moduleDesc + moduleTag + demoHtml;
             html = html.replace(re, `${openTag}${inner}${closeTag}`);
+        }
+    }
+
+    if (pageKey !== 'home' && Array.isArray(doc.navPageKeys)) {
+        const navIdx = doc.navPageKeys.indexOf(pageKey);
+        if (navIdx >= 0) {
+            const num = String(navIdx + 1).padStart(2, '0');
+            html = html.replace(
+                /(<div class="app-header-brand"[^>]*>)/i,
+                `$1<span class="app-header-num">${num}</span>`
+            );
         }
     }
 

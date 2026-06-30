@@ -1,0 +1,118 @@
+@use "breakpoints" as *;
+
+$font-mono: var(--font-icon), 'JetBrains Mono', monospace;
+
+.app-header {
+  position: relative;
+  z-index: 1000;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: transparent;
+  box-sizing: border-box;
+  padding: max(10px, env(safe-area-inset-top)) 20px 10px 20px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.app-header-brand {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-right: 1px solid var(--border-color);
+  padding-right: 1rem;
+}
+
+.app-header-num {
+  font-family: $font-mono;
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.app-header-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--text-color);
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.app-header-logo-aperture {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  animation: aperture-rotate 20s linear infinite;
+}
+
+.app-header-logo-text {
+  font-family: $font-mono;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.app-header-title-block {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.app-header-extra {
+  flex: 0 1 auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.app-header-actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-left: auto;
+}
+
+@media (max-width: $breakpoint-mobile) {
+  .app-header {
+    gap: 0.5rem;
+    padding: max(8px, env(safe-area-inset-top)) 12px 8px 12px;
+  }
+
+  .app-header-brand {
+    padding-right: 0.5rem;
+  }
+
+  .app-header-logo-text {
+    display: none;
+  }
+}
+
+body.nav-landing-page .app-header {
+  border-bottom: none;
+  background: transparent;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  padding: max(12px, env(safe-area-inset-top)) max(1.25rem, env(safe-area-inset-right)) 12px max(1.25rem, env(safe-area-inset-left));
+
+  .app-header-brand {
+    border-right: none;
+  }
+}

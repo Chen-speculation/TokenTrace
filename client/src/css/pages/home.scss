@@ -1,4 +1,5 @@
 @use 'shared-chrome';
+@use 'app-header';
 @use 'breakpoints' as *;
 
 // ===== 导航首页：Swiss Style + 科学仪器界面 =====
@@ -54,13 +55,7 @@ html[data-theme='dark'] body.nav-landing-page {
   --nav-landing-card-bg-hover: var(--bg-hover);
 }
 
-.nav-landing-settings {
-  position: absolute;
-  top: max(12px, env(safe-area-inset-top));
-  right: max(1.25rem, env(safe-area-inset-right));
-  z-index: 10;
-  box-sizing: border-box;
-}
+// nav-landing-settings 已被 app-header 替代
 
 // ===== Main 容器：12 列网格 =====
 .nav-landing-main {
@@ -81,9 +76,14 @@ html[data-theme='dark'] body.nav-landing-page {
 }
 
 // ===== Hero Section =====
-.nav-landing-hero {
-  grid-column: span 12;
-  margin-bottom: 3rem;
+// Hero section 已移除，保留 slogan
+.nav-landing-slogan {
+  font-size: 0.9rem;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin: 0 0 1.5rem 0;
+  max-width: 540px;
 }
 
 @media (max-width: $breakpoint-mobile) {
@@ -143,11 +143,7 @@ html[data-theme='dark'] body.nav-landing-page {
   justify-content: center;
 }
 
-.lens-aperture {
-  width: 120px;
-  height: 120px;
-  animation: aperture-rotate 20s linear infinite;
-}
+// Lens aperture 动画已随 hero section 移除
 
 @keyframes aperture-rotate {
   from { transform: rotate(0deg); }

@@ -1,6 +1,6 @@
 """prediction_attribute API 的 source_page slug 规范化（含旧客户端兼容）。"""
 
-ALLOWED_SOURCE_PAGES = frozenset({"analysis", "chat", "attribution", "causal_flow", "logit_lens"})
+ALLOWED_SOURCE_PAGES = frozenset({"analysis", "chat", "attribution", "causal_flow", "logit_lens", "integrated"})
 
 
 def normalize_source_page(raw: str) -> str | None:

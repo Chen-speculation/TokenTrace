@@ -42,6 +42,8 @@ import { entryKey } from '../../shared/prediction_attribution/core/attributionRe
 import { bindExcludePromptPatternsUi } from '../../shared/prediction_attribution/core/excludePromptPatternsUi';
 import { syncDraftCommittedButtonPair } from '../../shared/cross/syncDraftCommittedButtonPair';
 import { lsReadEnum, lsWriteString } from '../../shared/storage/localStorageHelpers';
+import { runActivationExplain } from '../../shared/prediction_attribution/activationExplainer';
+import { GLTR_Text_Box } from '../../shared/vis/GLTR_Text_Box';
 
 d3.selectAll('.loadersmall').style('display', 'none');
 
@@ -639,3 +641,47 @@ function initAttributionExamples(): void {
 }
 
 initAttributionExamples();
+
+// --- Activation Explainer ---
+let aeSelectedTokenIndex: number | null = null;
+const attrAePanel = document.getElementById('attr_ae_panel');
+const attrAeTrigger = document.getElementById('attr_ae_trigger') as HTMLButtonElement | null;
+
+eventHandler.bind(GLTR_Text_Box.events.tokenHovered, (e: { hovered: boolean; d: { tokenData: { raw?: string } } }) => {
+    if (!e.hovered) return;
+    if (!lastCommittedInputs?.context) return;
+    if (attrAePanel) attrAePanel.style.display = 'block';
+});
+
+eventHandler.bind(GLTR_Text_Box.events.tokenClicked, (e: { tokenIndex: number }) => {
+    if (!lastCommittedInputs?.context) return;
+    aeSelectedTokenIndex = e.tokenIndex;
+    if (attrAeTrigger) {
+        attrAeTrigger.disabled = false;
+        const gradientLmf = (gradientInspector as unknown as { lmf?: { getCurrentAnalyzeResult?: () => { bpe_strings?: Array<{ raw?: string }> } | null } }).lmf;
+        const rd = gradientLmf?.getCurrentAnalyzeResult?.();
+        const tokenRaw = rd?.bpe_strings?.[e.tokenIndex]?.raw ?? '';
+        attrAeTrigger.textContent = `${tr('Explain activation')}: "${tokenRaw}"`;
+    }
+});
+
+if (attrAeTrigger) {
+    attrAeTrigger.addEventListener('click', () => {
+        if (aeSelectedTokenIndex === null || !lastCommittedInputs?.context) return;
+        const model = currentAttributionModelVariant();
+        const tokenRaw = (() => {
+            const gradientLmf = (gradientInspector as unknown as { lmf?: { getCurrentAnalyzeResult?: () => { bpe_strings?: Array<{ raw?: string }> } | null } }).lmf;
+            const rd = gradientLmf?.getCurrentAnalyzeResult?.();
+            return rd?.bpe_strings?.[aeSelectedTokenIndex]?.raw ?? '';
+        })();
+        if (!tokenRaw) return;
+        void runActivationExplain(api, model, 'attribution', lastCommittedInputs.context, tokenRaw, {
+            panelId: 'attr_ae_panel',
+            loadingId: 'attr_ae_loading',
+            resultId: 'attr_ae_result',
+            errorId: 'attr_ae_error',
+            explanationId: 'attr_ae_explanation',
+            cosineId: 'attr_ae_cosine',
+        });
+    });
+}

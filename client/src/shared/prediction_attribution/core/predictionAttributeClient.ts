@@ -16,7 +16,8 @@ export type PredictionAttributeSourcePage =
     | 'analysis'
     | 'chat'
     | 'attribution'
-    | 'causal_flow';
+    | 'causal_flow'
+    | 'integrated';
 
 export async function fetchAblationAttribute(
     apiBaseForRequests: string,

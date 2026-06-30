@@ -32,6 +32,7 @@ import {PANEL_SPLIT_STORAGE_KEY_START} from '../../shared/cross/panelSplitStorag
 import {handleServerDemoSave} from '../../shared/controllers/serverDemoController';
 // 公共初始化模块
 import {initializeCommonApp} from '../../shared/bootstrap';
+import {initTypewriterPlaceholders} from '../../shared/ui/typewriterPlaceholder';
 import { registerPageBusy } from '../../shared/core/activitySession';
 // 工具函数
 import {ensureJsonExtension} from '../../shared/cross/localFileUtils';
@@ -81,6 +82,16 @@ window.onload = () => {
     const api_prefix = URLHandler.parameters['api'] || '';
     const bodyElement = <Element>d3.select('body').node();
     const { eventHandler, api, tokenSurprisalColorScale, byteSurprisalColorScale, totalSurprisalFormat } = initializeCommonApp(api_prefix, bodyElement);
+
+    initTypewriterPlaceholders({
+        selector: '#test_text[data-typewriter]',
+        placeholders: [
+            'Paste or type text to analyze...',
+            'Try a news article, a poem, or a tweet...',
+            'Which words surprise the model most?',
+            'Discover the information density of your text...',
+        ],
+    });
 
     // 语义分析未开启时，确保信息密度颜色不被误关（防止刷新后 localStorage 残留 disable=true）
     if (!getSemanticAnalysisEnabled()) {

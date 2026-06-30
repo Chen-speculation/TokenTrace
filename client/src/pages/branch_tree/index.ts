@@ -146,38 +146,58 @@ function renderBranchTree(): void {
     surface.innerHTML = '';
     const svgNs = 'http://www.w3.org/2000/svg';
     const w = surface.clientWidth || 800;
-    const h = Math.max(400, countBranchTreeNodes(branchTreeRoot) * 40);
     const svg = document.createElementNS(svgNs, 'svg');
-    svg.setAttribute('width', String(w));
-    svg.setAttribute('height', String(h));
     svg.style.display = 'block';
-    svg.style.width = '100%';
 
-    // BFS layout
-    const levels: BranchTreeNode[][] = [];
-    const queue: [BranchTreeNode, number][] = [[branchTreeRoot, 0]];
-    while (queue.length) {
-        const [n, d] = queue.shift()!;
-        if (!levels[d]) levels[d] = [];
-        levels[d].push(n);
-        for (const c of n.children) queue.push([c, d + 1]);
+    function subtreeWidth(node: BranchTreeNode): number {
+        if (node.children.length === 0) return 1;
+        return node.children.reduce((sum, c) => sum + subtreeWidth(c), 0);
     }
 
-    const rowH = h / (levels.length || 1);
+    const LEVEL_HEIGHT = 80;
+    const NODE_SPACING = 70;
     const nodePositions = new Map<string, { x: number; y: number }>();
 
-    for (let d = 0; d < levels.length; d++) {
-        const row = levels[d];
-        const colW = w / (row.length + 1);
-        for (let i = 0; i < row.length; i++) {
-            const n = row[i];
-            const x = colW * (i + 1);
-            const y = rowH * d + rowH * 0.5;
-            nodePositions.set(n.id, { x, y });
+    function layoutSubtree(node: BranchTreeNode, depth: number, leftOffset: number): number {
+        const subtreeW = subtreeWidth(node);
+        const nodeWidth = subtreeW * NODE_SPACING;
+
+        if (node.children.length === 0) {
+            const x = leftOffset + nodeWidth / 2;
+            const y = depth * LEVEL_HEIGHT + 40;
+            nodePositions.set(node.id, { x, y });
+            return nodeWidth;
         }
+
+        let childLeft = leftOffset;
+        for (const child of node.children) {
+            const childW = layoutSubtree(child, depth + 1, childLeft);
+            childLeft += childW;
+        }
+
+        const firstChild = nodePositions.get(node.children[0].id);
+        const lastChild = nodePositions.get(node.children[node.children.length - 1].id);
+        const x = (firstChild && lastChild)
+            ? (firstChild.x + lastChild.x) / 2
+            : leftOffset + nodeWidth / 2;
+        const y = depth * LEVEL_HEIGHT + 40;
+        nodePositions.set(node.id, { x, y });
+
+        return childLeft - leftOffset;
     }
 
-    // Draw links
+    const totalWidth = layoutSubtree(branchTreeRoot, 0, 0);
+    const maxDepth = (() => {
+        let md = 0;
+        const q: [BranchTreeNode, number][] = [[branchTreeRoot, 0]];
+        while (q.length) { const [n, d] = q.shift()!; md = Math.max(md, d); for (const c of n.children) q.push([c, d + 1]); }
+        return md;
+    })();
+    const h = (maxDepth + 1) * LEVEL_HEIGHT + 40;
+    const svgWidth = Math.max(w, totalWidth + 40);
+    svg.setAttribute('width', String(svgWidth));
+    svg.setAttribute('height', String(h));
+
     for (const [, node] of branchTreeNodeMap) {
         if (!node.parentId) continue;
         const parent = branchTreeNodeMap.get(node.parentId);
@@ -185,18 +205,17 @@ function renderBranchTree(): void {
         const pPos = nodePositions.get(parent.id);
         const cPos = nodePositions.get(node.id);
         if (!pPos || !cPos) continue;
-        const line = document.createElementNS(svgNs, 'line');
-        line.setAttribute('x1', String(pPos.x));
-        line.setAttribute('y1', String(pPos.y));
-        line.setAttribute('x2', String(cPos.x));
-        line.setAttribute('y2', String(cPos.y));
-        line.setAttribute('stroke', 'var(--border-color)');
-        line.setAttribute('stroke-width', '1.5');
-        svg.appendChild(line);
+        const midY = (pPos.y + cPos.y) / 2;
+        const path = document.createElementNS(svgNs, 'path');
+        path.setAttribute('d', `M ${pPos.x} ${pPos.y} C ${pPos.x} ${midY}, ${cPos.x} ${midY}, ${cPos.x} ${cPos.y}`);
+        path.setAttribute('stroke', 'var(--border-color)');
+        path.setAttribute('stroke-width', '1.5');
+        path.setAttribute('fill', 'none');
+        svg.appendChild(path);
     }
 
-    // Draw nodes
     for (const [, node] of branchTreeNodeMap) {
+        if (!node.parentId) continue;
         const pos = nodePositions.get(node.id);
         if (!pos) continue;
         const g = document.createElementNS(svgNs, 'g');
@@ -207,13 +226,16 @@ function renderBranchTree(): void {
             }
         });
 
+        const tokenText = node.candidateToken || node.prefix.slice(0, 8);
+        const charCount = Array.from(tokenText).length;
+        const radius = Math.max(18, Math.min(40, 12 + charCount * 4));
+
         const intensity = Math.min(1, (node.prob || 0) * 3);
         const color = `rgba(255, 71, 64, ${0.2 + intensity * 0.6})`;
-
         const circle = document.createElementNS(svgNs, 'circle');
         circle.setAttribute('cx', String(pos.x));
         circle.setAttribute('cy', String(pos.y));
-        circle.setAttribute('r', '18');
+        circle.setAttribute('r', String(radius));
         circle.setAttribute('fill', color);
         circle.setAttribute('stroke', 'var(--border-color)');
         circle.setAttribute('stroke-width', '1.5');
@@ -223,15 +245,15 @@ function renderBranchTree(): void {
         text.setAttribute('x', String(pos.x));
         text.setAttribute('y', String(pos.y + 4));
         text.setAttribute('text-anchor', 'middle');
-        text.setAttribute('font-size', '11');
+        text.setAttribute('font-size', charCount > 6 ? '10' : '11');
         text.setAttribute('fill', 'var(--text-color)');
-        text.textContent = node.candidateToken || node.prefix.slice(0, 8);
+        text.textContent = tokenText;
         g.appendChild(text);
 
         if (node.prob !== undefined) {
             const probText = document.createElementNS(svgNs, 'text');
             probText.setAttribute('x', String(pos.x));
-            probText.setAttribute('y', String(pos.y + 28));
+            probText.setAttribute('y', String(pos.y + radius + 14));
             probText.setAttribute('text-anchor', 'middle');
             probText.setAttribute('font-size', '9');
             probText.setAttribute('fill', 'var(--text-muted)');
@@ -242,7 +264,6 @@ function renderBranchTree(): void {
         svg.appendChild(g);
     }
 
-    // Root node
     if (branchTreeRoot) {
         const pos = nodePositions.get(branchTreeRoot.id);
         if (pos) {
@@ -251,14 +272,17 @@ function renderBranchTree(): void {
             g.addEventListener('click', () => {
                 if (!branchTreeRoot!.expanded) void expandBranchNode(branchTreeRoot!);
             });
+            const rootText = branchTreeRoot.prefix.slice(0, 12) || 'root';
+            const charCount = Array.from(rootText).length;
+            const rectW = Math.max(60, charCount * 8 + 16);
             const rect = document.createElementNS(svgNs, 'rect');
-            rect.setAttribute('x', String(pos.x - 30));
+            rect.setAttribute('x', String(pos.x - rectW / 2));
             rect.setAttribute('y', String(pos.y - 14));
-            rect.setAttribute('width', '60');
+            rect.setAttribute('width', String(rectW));
             rect.setAttribute('height', '28');
-            rect.setAttribute('rx', '4');
+            rect.setAttribute('rx', '0');
             rect.setAttribute('fill', 'none');
-            rect.setAttribute('stroke', '#aaa');
+            rect.setAttribute('stroke', 'var(--border-strong)');
             rect.setAttribute('stroke-width', '1.5');
             g.appendChild(rect);
             const text = document.createElementNS(svgNs, 'text');
@@ -267,7 +291,7 @@ function renderBranchTree(): void {
             text.setAttribute('text-anchor', 'middle');
             text.setAttribute('font-size', '11');
             text.setAttribute('fill', 'var(--text-color)');
-            text.textContent = branchTreeRoot.prefix.slice(0, 12) || 'root';
+            text.textContent = rootText;
             g.appendChild(text);
             svg.appendChild(g);
         }

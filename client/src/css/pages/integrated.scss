@@ -1,0 +1,161 @@
+@use 'app-pages';
+@use 'attribution-inspector';
+@use 'chat-input-panel';
+@use 'generation-status';
+@use 'lmf-readout' as lmf;
+@use '../base/narrow-ios-form-font-tail' as ios-form-font;
+
+body.integrated-page {
+  .main_frame.integrated-frame {
+    display: grid;
+    grid-template-columns: 320px 6px 1fr 6px 400px;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .integrated-left {
+    border-right: 1px solid var(--border-color);
+    overflow-y: auto;
+    background: transparent;
+  }
+
+  .integrated-center {
+    position: relative;
+    overflow: hidden;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+
+    #integrated_dag_results {
+      flex: 1;
+      overflow: auto;
+    }
+  }
+
+  .integrated-right {
+    border-left: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    background: transparent;
+    overflow: hidden;
+  }
+
+  .resizer {
+    cursor: col-resize;
+    background: var(--border-color);
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: var(--accent-color);
+    }
+  }
+
+  .integrated-panel-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    overflow-x: auto;
+    scrollbar-width: none;
+    flex-shrink: 0;
+
+    &::-webkit-scrollbar { display: none; }
+  }
+
+  .integrated-tab-btn {
+    flex: 1;
+    padding: 10px 8px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 11px;
+    font-family: var(--font-icon);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+
+    &:hover {
+      color: var(--text-color);
+      background: var(--bg-hover-light);
+    }
+
+    &.is-active {
+      color: var(--accent-color);
+      border-bottom-color: var(--accent-color);
+      font-weight: 600;
+    }
+  }
+
+  .integrated-panel-body {
+    flex: 1;
+    overflow-y: auto;
+    position: relative;
+  }
+
+  .integrated-panel-content {
+    padding: 16px;
+  }
+
+  .integrated-panel-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--text-muted);
+    text-align: center;
+    gap: 8px;
+    padding: 40px 24px;
+  }
+
+  .integrated-panel-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-family: var(--font-icon);
+    animation: ae-pulse 1.5s ease-in-out infinite;
+  }
+
+  .integrated-highlight-surface {
+    min-height: 120px;
+  }
+
+  .integrated-branch-svg {
+    display: block;
+    width: 100%;
+  }
+
+  @media (max-width: 1200px) {
+    .main_frame.integrated-frame {
+      grid-template-columns: 280px 6px 1fr 6px 340px;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .main_frame.integrated-frame {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto auto;
+      height: auto;
+      overflow: visible;
+    }
+
+    .resizer { display: none; }
+
+    .integrated-left,
+    .integrated-right {
+      border: none;
+      border-top: 1px solid var(--border-color);
+      max-height: 400px;
+    }
+
+    .integrated-center {
+      min-height: 400px;
+    }
+  }
+}
+
+@include ios-form-font.apply;

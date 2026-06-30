@@ -10,6 +10,10 @@ import {Histogram, type HistogramBinClickEvent} from '../../shared/vis/Histogram
 import {ScatterPlot} from '../../shared/vis/ScatterPlot';
 import {getDiffColor} from '../../shared/cross/SurprisalColorConfig';
 import {initThemeManager} from '../../shared/ui/theme';
+import {initLanguageManager} from '../../shared/ui/language';
+import {initI18n, tr} from '../../shared/lang/i18n-lite';
+import {AdminManager} from '../../shared/cross/adminManager';
+import {SettingsMenuManager} from '../../shared/cross/settingsMenuManager';
 import {showAlertDialog, showDialog, showConfirmDialog} from '../../shared/ui/dialog';
 import {initDemoManager, type DemoManager} from '../../shared/ui/demoManager';
 import {isValidDemoFormat} from '../../shared/cross/localFileUtils';
@@ -49,7 +53,6 @@ import {
     getDeltaByteSurprisalHistogramConfig,
     getSurprisalProgressConfig
 } from "../../features/analysis/visualizationConfigs";
-import { tr, initI18n } from '../../shared/lang/i18n-lite';
 import { addDigitsMergeRenderListener, getDigitsMergeEnabled } from '../../shared/cross/digitsMergeManager';
 
 // 使用从 demoManager 导出的验证函数
@@ -1859,9 +1862,24 @@ window.onload = () => {
         // 这里不需要重复调用
     };
 
+    const adminManager = AdminManager.getInstance();
+    const languageManager = initLanguageManager({}, '#language_dropdown');
+    void new SettingsMenuManager(
+        '#settings_btn', '#settings_menu', '#admin_mode_btn',
+        adminManager, api, undefined, undefined,
+        themeManager, languageManager, 'common'
+    );
+
     // 初始化国际化（跟随首页设置）
     initI18n();
     document.title = tr(document.title);
+
+    const compareExtra = document.querySelector('.compare-header-extra');
+    const headerExtra = document.querySelector('.app-header .app-header-extra:empty');
+    if (compareExtra && headerExtra) {
+        headerExtra.innerHTML = compareExtra.innerHTML;
+        compareExtra.remove();
+    }
 
     // 启动
     initializeColumns().then(() => {
