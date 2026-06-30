@@ -62,7 +62,7 @@ document.documentElement.lang = 'zh-CN';
 // ===== Completion options (model select + max tokens) =====
 const completionOptions = createCompletionOptionsRow({
     isSkipChatTemplate: () => true,
-    metricModel: d3.select('#integrated_metric_model'),
+    metricModel: d3.select('#integrated_model_select'),
     alertDialogTitle: tr('Integrated Lab'),
     onStateChange: () => syncSubmitButtonState(),
     adminMode: () => adminManager.isInAdminMode(),
@@ -152,10 +152,16 @@ panels.activation.hidden = true;
 // ===== Submit button =====
 function syncSubmitButtonState(): void {
     const text = promptTextarea.value.trim();
-    const ready = text.length > 0 && !inFlight;
-    submitBtn.disabled = !ready;
-    submitBtn.classList.toggle('inactive', !ready);
-    submitBtn.textContent = inFlight ? tr('Stop') : tr('Start');
+    if (inFlight) {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('inactive');
+        submitBtn.textContent = tr('Stop');
+    } else {
+        const ready = text.length > 0;
+        submitBtn.disabled = !ready;
+        submitBtn.classList.toggle('inactive', !ready);
+        submitBtn.textContent = tr('Start');
+    }
 }
 
 promptTextarea.addEventListener('input', () => {
@@ -275,7 +281,12 @@ async function onSelectedNodeChanged(nodeId: string | null): Promise<void> {
     }
 
     const step = findStepByNodeId(nodeId);
-    if (!step) return;
+    if (!step) {
+        placeholderEl.style.display = '';
+        placeholderEl.querySelector('.empty-state-title')!.textContent = tr('Select a token');
+        placeholderEl.querySelector('.empty-state-description')!.textContent = tr('Click a generated node in the DAG to inspect it with all six lenses.');
+        return;
+    }
 
     selectedStep = step;
     placeholderEl.style.display = 'none';
@@ -322,6 +333,10 @@ async function updateHighlightPanel(step: TokenGenStep): Promise<void> {
 function renderHighlightFromAttribution(surface: HTMLElement, step: TokenGenStep): void {
     surface.innerHTML = '';
     const tokens = step.response.token_attribution ?? [];
+    if (tokens.length === 0) {
+        surface.innerHTML = '<div class="ae-error">No attribution data for this token.</div>';
+        return;
+    }
     const maxScore = Math.max(...tokens.map(t => Math.abs(t.score)), 0.001);
 
     const container = document.createElement('div');
@@ -341,6 +356,11 @@ function renderHighlightFromAttribution(surface: HTMLElement, step: TokenGenStep
 
 // ===== Panel: Context Attribution =====
 function updateAttributionPanel(step: TokenGenStep): void {
+    const surface = document.getElementById('integrated_attribution_surface')!;
+    if (!step.response || !step.response.token_attribution || step.response.token_attribution.length === 0) {
+        surface.innerHTML = '<div class="ae-error">No attribution data for this token.</div>';
+        return;
+    }
     if (!attributionInspector) {
         attributionInspector = createAttributionInspector({
             resultsRoot: d3.select('#integrated_attribution_surface'),

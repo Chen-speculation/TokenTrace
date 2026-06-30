@@ -1480,6 +1480,7 @@ export function initGenAttributeDagView(
                 recursiveEdgeAnimation.stopPlayback();
                 refreshNodeLinkHighlight();
                 syncDagPlayButtonImpl();
+                onDagRefresh?.();
             });
     }
 
